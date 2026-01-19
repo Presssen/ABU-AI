@@ -865,7 +865,7 @@ export const CONTENT: Record<Language, Content> = {
       }
     },
     reviews: {
-      title: "Amado por los Merchants",
+      title: "Amado por los eCoomerce",
       items: [
         {
           storeName: "The Organic Tea Co.",

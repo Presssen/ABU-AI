@@ -20,17 +20,24 @@ const Testimonials: React.FC<TestimonialsProps> = ({ text }) => {
          </h2>
       </div>
 
-      <div className="relative w-full overflow-hidden mask-gradient-x">
-          {/* Gradient Masks */}
-          <div className="absolute top-0 left-0 w-32 h-full z-10 bg-gradient-to-r from-[#0f172a] to-transparent pointer-events-none"></div>
-          <div className="absolute top-0 right-0 w-32 h-full z-10 bg-gradient-to-l from-[#0f172a] to-transparent pointer-events-none"></div>
-
+      {/* 
+        We use CSS Mask Image instead of background gradients.
+        This ensures the background (particles/orbs) is visible through the fade 
+        and between the cards at the edges.
+      */}
+      <div 
+        className="relative w-full overflow-hidden"
+        style={{
+          maskImage: 'linear-gradient(to right, transparent, black 10%, black 90%, transparent)',
+          WebkitMaskImage: 'linear-gradient(to right, transparent, black 10%, black 90%, transparent)'
+        }}
+      >
           {/* Marquee Container */}
-          <div className="flex w-max animate-scroll hover:pause-scroll">
+          <div className="flex w-max animate-scroll hover:pause-scroll py-4">
             {/* First Loop */}
             <div className="flex gap-6 px-3">
                {text.items.map((review, i) => (
-                  <GlassCard key={i} className="w-[350px] p-6 flex-shrink-0 bg-white/5 hover:bg-white/10 transition-colors">
+                  <GlassCard key={i} className="w-[350px] p-6 flex-shrink-0 bg-white/5 hover:bg-white/10 transition-colors backdrop-blur-md">
                      <div className="flex space-x-1 mb-4 text-yellow-400">
                         {[...Array(review.rating)].map((_, r) => (
                             <Star key={r} size={16} fill="currentColor" />
@@ -47,7 +54,7 @@ const Testimonials: React.FC<TestimonialsProps> = ({ text }) => {
             {/* Second Loop (Duplicate) for infinite effect */}
             <div className="flex gap-6 px-3">
                {text.items.map((review, i) => (
-                  <GlassCard key={`dup-${i}`} className="w-[350px] p-6 flex-shrink-0 bg-white/5 hover:bg-white/10 transition-colors">
+                  <GlassCard key={`dup-${i}`} className="w-[350px] p-6 flex-shrink-0 bg-white/5 hover:bg-white/10 transition-colors backdrop-blur-md">
                      <div className="flex space-x-1 mb-4 text-yellow-400">
                         {[...Array(review.rating)].map((_, r) => (
                             <Star key={r} size={16} fill="currentColor" />
