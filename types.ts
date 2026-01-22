@@ -50,6 +50,13 @@ export interface FAQItem {
   answer: string;
 }
 
+export interface CookieCategory {
+  id: 'necessary' | 'analytics' | 'marketing';
+  title: string;
+  description: string;
+  required: boolean;
+}
+
 export interface Content {
   nav: {
     features: string;
@@ -149,5 +156,18 @@ export interface Content {
       successMessage: string;
       error: string;
     }
-  }
+  };
+  cookieConsent: {
+    text: string;
+    privacyLink: string;
+    accept: string;
+    decline: string;
+    customize: string;
+    modal: {
+        title: string;
+        description: string;
+        save: string;
+        categories: CookieCategory[];
+    }
+  };
 }

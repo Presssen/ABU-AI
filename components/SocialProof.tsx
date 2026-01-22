@@ -1,7 +1,8 @@
 import React from 'react';
 import { Content } from '../types';
-import { ShieldCheck, Award, Zap } from 'lucide-react';
+import { ShieldCheck, Award } from 'lucide-react';
 import { GlassCard } from './ui/GlassCard';
+import { SHOPIFY_LOGO_URL } from '../constants';
 
 interface SocialProofProps {
   text: Content['trust'];
@@ -19,7 +20,7 @@ const SocialProof: React.FC<SocialProofProps> = ({ text }) => {
             <div className="flex flex-wrap justify-center items-center gap-8 md:gap-16 opacity-70 grayscale hover:grayscale-0 transition-all duration-500">
                 {/* Emulated Logos */}
                 <div className="flex items-center space-x-2 text-xl font-bold font-sans">
-                    <Zap className="text-[#95BF47]" />
+                    <img src={SHOPIFY_LOGO_URL} alt="Shopify" className="h-6 w-auto" />
                     <span>shopify<span className="font-light">plus</span></span>
                 </div>
                 

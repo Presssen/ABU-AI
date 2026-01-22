@@ -16,6 +16,8 @@ import Contact from './components/Contact';
 import Blog from './components/Blog';
 import Background from './components/Background';
 import SEO from './components/SEO';
+import CookieConsent from './components/CookieConsent';
+import ChatWidget from './components/ChatWidget';
 
 function App() {
   const [lang, setLang] = useState<Language>('es');
@@ -73,6 +75,12 @@ function App() {
 
       {/* Footer receives navigation props */}
       <Footer text={text.footer} setView={setView} />
+      
+      {/* Cookie Consent Popup */}
+      <CookieConsent text={text.cookieConsent} setView={setView} />
+      
+      {/* AI Chat Widget */}
+      <ChatWidget lang={lang} content={text} />
     </div>
   );
 }
