@@ -62,16 +62,17 @@ const Pricing: React.FC<PricingProps> = ({ text }) => {
                     </ul>
                 </div>
 
-                <button 
+                <a
+                  href="https://apps.shopify.com/abu-cross-selling-upselling"
                   className={`
-                    w-full py-3 rounded-xl font-bold text-sm transition-all mt-auto
+                    w-full py-3 rounded-xl font-bold text-sm transition-all mt-auto text-center block
                     ${plan.recommended 
                       ? 'bg-white text-blue-900 hover:bg-blue-50 shadow-lg' 
                       : 'bg-white/10 text-white hover:bg-white/20 border border-white/10'}
                   `}
                 >
                   {plan.name}
-                </button>
+                </a>
               </GlassCard>
             </div>
           ))}

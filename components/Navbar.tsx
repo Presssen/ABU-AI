@@ -105,7 +105,7 @@ const Navbar: React.FC<NavbarProps> = ({ lang, setLang, currentView, setView, te
               </button>
 
               {/* CTA */}
-              <a href="#" className="flex items-center space-x-2 bg-white text-[#0f172a] pl-3 pr-5 py-2 rounded-full font-bold text-sm transition-all transform hover:scale-105 shadow-[0_0_15px_rgba(255,255,255,0.2)] hover:shadow-[0_0_20px_rgba(255,255,255,0.4)]">
+              <a href="https://apps.shopify.com/abu-cross-selling-upselling" className="flex items-center space-x-2 bg-white text-[#0f172a] pl-3 pr-5 py-2 rounded-full font-bold text-sm transition-all transform hover:scale-105 shadow-[0_0_15px_rgba(255,255,255,0.2)] hover:shadow-[0_0_20px_rgba(255,255,255,0.4)]">
                 <div className="w-6 h-6 flex items-center justify-center">
                     <img src={SHOPIFY_LOGO_URL} alt="Shopify" className="w-full h-full object-contain" />
                 </div>
@@ -138,7 +138,7 @@ const Navbar: React.FC<NavbarProps> = ({ lang, setLang, currentView, setView, te
             <a href="#detailed-features" className="block text-gray-300 hover:text-white font-medium p-2 hover:bg-white/5 rounded-lg" onClick={(e) => handleNavClick(e, 'detailed-features')}>{text.details}</a>
             <a href="#pricing" className="block text-gray-300 hover:text-white font-medium p-2 hover:bg-white/5 rounded-lg" onClick={(e) => handleNavClick(e, 'pricing')}>{text.pricing}</a>
             <button className="block w-full text-left text-gray-300 hover:text-white font-medium p-2 hover:bg-white/5 rounded-lg" onClick={(e) => handlePageChange(e, 'blog')}>{text.blog}</button>
-            <a href="#" className="flex items-center justify-center space-x-2 w-full bg-white text-[#0f172a] px-5 py-3 rounded-xl font-bold">
+            <a href="https://apps.shopify.com/abu-cross-selling-upselling" className="flex items-center justify-center space-x-2 w-full bg-white text-[#0f172a] px-5 py-3 rounded-xl font-bold">
               <img src={SHOPIFY_LOGO_URL} alt="Shopify" className="h-6 w-auto object-contain" />
               <span>{text.cta}</span>
             </a>

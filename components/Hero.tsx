@@ -28,11 +28,11 @@ const Hero: React.FC<HeroProps> = ({ text }) => {
           </p>
           
           <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start space-y-4 sm:space-y-0 sm:space-x-4">
-            <a href="#" className="w-full sm:w-auto px-8 py-4 bg-white text-[#0f172a] rounded-xl font-bold text-lg hover:bg-blue-50 transition-all shadow-[0_0_20px_rgba(255,255,255,0.3)] flex items-center justify-center space-x-2">
+            <a href="https://apps.shopify.com/abu-cross-selling-upselling" className="w-full sm:w-auto px-8 py-4 bg-white text-[#0f172a] rounded-xl font-bold text-lg hover:bg-blue-50 transition-all shadow-[0_0_20px_rgba(255,255,255,0.3)] flex items-center justify-center space-x-2">
               <span>{text.ctaPrimary}</span>
               <ArrowRight size={20} />
             </a>
-            <a href="#" className="w-full sm:w-auto px-8 py-4 bg-white/5 backdrop-blur-md border border-white/10 text-white rounded-xl font-bold text-lg hover:bg-white/10 transition-all flex items-center justify-center">
+            <a href="https://ai-bundle-2.myshopify.com/" target="_blank" rel="noopener noreferrer" className="w-full sm:w-auto px-8 py-4 bg-white/5 backdrop-blur-md border border-white/10 text-white rounded-xl font-bold text-lg hover:bg-white/10 transition-all flex items-center justify-center">
               {text.ctaSecondary}
             </a>
           </div>
