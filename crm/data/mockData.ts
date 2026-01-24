@@ -1,8 +1,6 @@
 
 import { Lead, User } from "../types";
 
-// NOTE: In a production app, never store passwords in frontend code.
-// This is strictly for the requested mockup.
 export const USERS: User[] = [
     {
         username: "David",
@@ -12,40 +10,68 @@ export const USERS: User[] = [
     }
 ];
 
-export const MOCK_LEADS: Lead[] = [
+export const LEADS_SPAIN: Lead[] = [
     {
-        id: 1,
-        name: "Zapatería Los Amigos",
-        website: "www.zapatosamigos.com",
-        phone: "+34 612 345 678",
-        status: "pending"
+        id: 101,
+        domain: "zapatosamigos.com",
+        created: "2023-10-15",
+        emails: "contacto@zapatosamigos.com",
+        phones: "+34 612 345 678",
+        plan: "Basic",
+        leadStatus: "Pending",
+        storeStatus: "Active",
+        notes: "",
+        lastContact: ""
     },
     {
-        id: 2,
-        name: "Modas Paqui",
-        website: "www.modaspaqui.es",
-        phone: "+34 699 888 777",
-        status: "pending"
+        id: 102,
+        domain: "modaspaqui.es",
+        created: "2023-11-01",
+        emails: "info@modaspaqui.es",
+        phones: "", // Empty to test AI
+        plan: "Pro",
+        leadStatus: "Pending",
+        storeStatus: "Active",
+        notes: "Llamar por la mañana",
+        lastContact: "2023-11-05"
     },
     {
-        id: 3,
-        name: "Deportes Manolo",
-        website: "www.deportesmanolo.net",
-        phone: "+34 912 333 444",
-        status: "pending"
+        id: 103,
+        domain: "deportesmanolo.net",
+        created: "2023-09-20",
+        emails: "ventas@deportesmanolo.net",
+        phones: "+34 912 333 444",
+        plan: "Basic",
+        leadStatus: "Interested",
+        storeStatus: "Active",
+        notes: "",
+        lastContact: ""
+    }
+];
+
+export const LEADS_MEXICO: Lead[] = [
+    {
+        id: 201,
+        domain: "tacosytextiles.mx",
+        created: "2023-12-01",
+        emails: "hola@tacosytextiles.mx",
+        phones: "+52 55 1234 5678",
+        plan: "Enterprise",
+        leadStatus: "Pending",
+        storeStatus: "Active",
+        notes: "",
+        lastContact: ""
     },
     {
-        id: 4,
-        name: "Tech Solutions SL",
-        website: "www.techsolutions.io",
-        phone: "+34 600 111 222",
-        status: "pending"
-    },
-    {
-        id: 5,
-        name: "Green Garden Center",
-        website: "www.greengarden.com",
-        phone: "+34 934 567 890",
-        status: "pending"
+        id: 202,
+        domain: "artesaniasdelgolfo.com",
+        created: "2023-12-10",
+        emails: "info@artesanias.com",
+        phones: "",
+        plan: "Basic",
+        leadStatus: "Pending",
+        storeStatus: "Active",
+        notes: "",
+        lastContact: ""
     }
 ];

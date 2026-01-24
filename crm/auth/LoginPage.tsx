@@ -1,9 +1,8 @@
 
 import React, { useState } from 'react';
-import { Lock, Mail, ArrowRight, ShieldCheck } from 'lucide-react';
+import { Lock, Mail, ArrowRight, ShieldCheck, Eye, EyeOff } from 'lucide-react';
 import { GlassCard } from '../../components/ui/GlassCard';
 import { USERS } from '../data/mockData';
-import { ViewState } from '../../types';
 
 interface LoginPageProps {
     onLoginSuccess: (username: string) => void;
@@ -13,6 +12,7 @@ interface LoginPageProps {
 const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess, onBack }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
 
@@ -47,7 +47,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess, onBack }) => {
                     <div className="w-16 h-16 bg-blue-500/10 rounded-full flex items-center justify-center mx-auto mb-4 border border-blue-500/20">
                         <Lock size={32} className="text-blue-400" />
                     </div>
-                    <h1 className="text-2xl font-bold text-white mb-2">Acceso CRM</h1>
+                    <h1 className="text-2xl font-bold text-white mb-2">Acceso ABU</h1>
                     <p className="text-gray-400 text-sm flex items-center justify-center gap-2">
                         <ShieldCheck size={14} className="text-green-500" />
                         Conexión Segura
@@ -75,13 +75,20 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess, onBack }) => {
                         <div className="relative">
                             <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" size={18} />
                             <input 
-                                type="password" 
+                                type={showPassword ? "text" : "password"}
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
-                                className="w-full bg-[#0f172a]/50 border border-white/10 rounded-lg py-3 pl-10 pr-4 text-white placeholder-gray-600 focus:outline-none focus:border-blue-500 transition-colors"
+                                className="w-full bg-[#0f172a]/50 border border-white/10 rounded-lg py-3 pl-10 pr-12 text-white placeholder-gray-600 focus:outline-none focus:border-blue-500 transition-colors"
                                 placeholder="••••••••"
                                 required
                             />
+                            <button
+                                type="button"
+                                onClick={() => setShowPassword(!showPassword)}
+                                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-white transition-colors"
+                            >
+                                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                            </button>
                         </div>
                     </div>
 

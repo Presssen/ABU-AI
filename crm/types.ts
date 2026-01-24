@@ -2,15 +2,31 @@
 export interface User {
     username: string;
     email: string;
-    passwordHash: string; // In a real app, this is hashed. Storing plain for mock matching logic.
+    passwordHash: string;
     role: 'admin' | 'agent';
 }
 
 export interface Lead {
     id: number;
-    name: string;
-    website: string;
-    phone: string;
-    status: 'pending' | 'called' | 'interested' | 'rejected';
-    notes?: string;
+    domain: string;        // Col A
+    created: string;       // Col D
+    emails: string;        // Col E (Comma separated)
+    phones: string;        // Col F
+    plan: string;          // Col H
+    storeStatus: string;   // Col K (Active / Password Protected) - READ ONLY filter
+    notes: string;         // Col L (JSON string or Delimiter separated)
+    lastContact: string;   // Col M (Comma separated dates)
+    leadStatus: string;    // Col N (Pending, Interested, Meeting, Sale, Rejected) - EDITABLE
+    nextTask?: string;     // Col O - Description
+    taskDate?: string;     // Col P - Date/Time ISO string
+}
+
+export type Region = 'spain' | 'mexico';
+
+export interface DashboardStats {
+    totalLeads: number;
+    contacted: number;
+    meetingsBooked: number;
+    sales: number;
+    rejected: number;
 }
