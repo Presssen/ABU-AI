@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Language, ViewState } from './types';
 import { CONTENT } from './constants';
@@ -18,26 +19,78 @@ import Background from './components/Background';
 import SEO from './components/SEO';
 import CookieConsent from './components/CookieConsent';
 import ChatWidget from './components/ChatWidget';
+// CRM Imports
+import LoginPage from './crm/auth/LoginPage';
+import Dashboard from './crm/Dashboard';
 
 function App() {
   const [lang, setLang] = useState<Language>('es');
   const [currentView, setView] = useState<ViewState>('landing');
+  
+  // CRM State
+  const [currentUser, setCurrentUser] = useState<string | null>(null);
+
   const text = CONTENT[lang];
+
+  const handleLoginSuccess = (username: string) => {
+      setCurrentUser(username);
+      setView('dashboard');
+  };
+
+  const handleLogout = () => {
+      setCurrentUser(null);
+      setView('landing');
+  };
 
   const renderContent = () => {
     switch (currentView) {
+      case 'dashboard':
+          if (!currentUser) {
+              setView('login');
+              return null;
+          }
+          return <Dashboard currentUser={currentUser} onLogout={handleLogout} />;
+          
+      case 'login':
+          return <LoginPage onLoginSuccess={handleLoginSuccess} onBack={() => setView('landing')} />;
+
       case 'blog':
-        return <Blog text={text.blog} onBackToHome={() => setView('landing')} />;
+        return (
+            <>
+                <Navbar lang={lang} setLang={setLang} currentView={currentView} setView={setView} text={text.nav} />
+                <Blog text={text.blog} onBackToHome={() => setView('landing')} />
+                <Footer text={text.footer} setView={setView} />
+            </>
+        );
       case 'privacy':
-        return <PrivacyPolicy text={text.privacyPage} onBack={() => setView('landing')} />;
+        return (
+            <>
+                <Navbar lang={lang} setLang={setLang} currentView={currentView} setView={setView} text={text.nav} />
+                <PrivacyPolicy text={text.privacyPage} onBack={() => setView('landing')} />
+                <Footer text={text.footer} setView={setView} />
+            </>
+        );
       case 'terms':
-        return <TermsOfService text={text.termsPage} onBack={() => setView('landing')} />;
+        return (
+            <>
+                <Navbar lang={lang} setLang={setLang} currentView={currentView} setView={setView} text={text.nav} />
+                <TermsOfService text={text.termsPage} onBack={() => setView('landing')} />
+                <Footer text={text.footer} setView={setView} />
+            </>
+        );
       case 'contact':
-        return <Contact text={text.contactPage} onBack={() => setView('landing')} />;
+        return (
+            <>
+                <Navbar lang={lang} setLang={setLang} currentView={currentView} setView={setView} text={text.nav} />
+                <Contact text={text.contactPage} onBack={() => setView('landing')} />
+                <Footer text={text.footer} setView={setView} />
+            </>
+        );
       case 'landing':
       default:
         return (
           <>
+            <Navbar lang={lang} setLang={setLang} currentView={currentView} setView={setView} text={text.nav} />
             <SEO 
               title={lang === 'en' ? "ABU - #1 Upsell & Cross-sell App for Shopify" : "ABU - App #1 de Upsell y Cross-sell para Shopify"}
               description={lang === 'en' 
@@ -51,6 +104,7 @@ function App() {
             <Testimonials text={text.reviews} />
             <Pricing text={text.pricing} />
             <FAQ text={text.faq} />
+            <Footer text={text.footer} setView={setView} />
           </>
         );
     }
@@ -60,27 +114,17 @@ function App() {
     <div className="min-h-screen text-white selection:bg-blue-500/30">
       <Background />
       
-      {/* Navbar receives navigation props */}
-      <Navbar 
-        lang={lang} 
-        setLang={setLang} 
-        currentView={currentView}
-        setView={setView}
-        text={text.nav} 
-      />
-
       <main>
         {renderContent()}
       </main>
 
-      {/* Footer receives navigation props */}
-      <Footer text={text.footer} setView={setView} />
-      
-      {/* Cookie Consent Popup */}
-      <CookieConsent text={text.cookieConsent} setView={setView} />
-      
-      {/* AI Chat Widget */}
-      <ChatWidget lang={lang} content={text} />
+      {/* Utilities that should persist across public pages but maybe not Dashboard if we want clean UI */}
+      {currentView !== 'dashboard' && currentView !== 'login' && (
+          <>
+            <CookieConsent text={text.cookieConsent} setView={setView} />
+            <ChatWidget lang={lang} content={text} />
+          </>
+      )}
     </div>
   );
 }

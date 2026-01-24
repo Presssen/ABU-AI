@@ -1,5 +1,6 @@
+
 export type Language = 'es' | 'en';
-export type ViewState = 'landing' | 'privacy' | 'terms' | 'contact' | 'blog';
+export type ViewState = 'landing' | 'privacy' | 'terms' | 'contact' | 'blog' | 'login' | 'dashboard';
 
 export interface PricingPlan {
   name: string;

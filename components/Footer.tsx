@@ -1,5 +1,7 @@
+
 import React from 'react';
 import { Content, ViewState } from '../types';
+import { Lock } from 'lucide-react';
 
 interface FooterProps {
   text: Content['footer'];
@@ -15,7 +17,7 @@ const Footer: React.FC<FooterProps> = ({ text, setView }) => {
           <p className="text-gray-500 text-sm mt-1">© 2026 ABU App. {text.rights}</p>
         </div>
         
-        <div className="flex flex-wrap justify-center space-x-6 text-sm text-gray-400">
+        <div className="flex flex-wrap justify-center items-center space-x-6 text-sm text-gray-400">
            <button onClick={() => setView('blog')} className="hover:text-white transition-colors">
             {text.blog}
           </button>
@@ -27,6 +29,15 @@ const Footer: React.FC<FooterProps> = ({ text, setView }) => {
           </button>
           <button onClick={() => setView('contact')} className="hover:text-white transition-colors">
             {text.contact}
+          </button>
+          
+          {/* Discreet Admin Link */}
+          <button 
+            onClick={() => setView('login')} 
+            className="hover:text-blue-400 transition-colors ml-4 pl-4 border-l border-gray-700 flex items-center gap-1 opacity-50 hover:opacity-100"
+            title="Acceso Empleados"
+          >
+            <Lock size={12} />
           </button>
         </div>
       </div>
