@@ -19,6 +19,7 @@ export interface Lead {
     leadStatus: string;    // Col N (Pending, Interested, Meeting, Sale, Rejected) - EDITABLE
     nextTask?: string;     // Col O - Description
     taskDate?: string;     // Col P - Date/Time ISO string
+    assignedTo?: string;   // Col Q - Agent Username
 }
 
 export type Region = 'spain' | 'mexico';

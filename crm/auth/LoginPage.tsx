@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Lock, Mail, ArrowRight, ShieldCheck, Eye, EyeOff, Check } from 'lucide-react';
+import { Lock, User as UserIcon, ArrowRight, ShieldCheck, Eye, EyeOff, Check } from 'lucide-react';
 import { GlassCard } from '../../components/ui/GlassCard';
 import { USERS } from '../data/mockData';
 
@@ -10,7 +10,7 @@ interface LoginPageProps {
 }
 
 const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess, onBack }) => {
-    const [email, setEmail] = useState('');
+    const [identifier, setIdentifier] = useState(''); // Changed from email to identifier
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
     const [rememberMe, setRememberMe] = useState(false);
@@ -22,9 +22,12 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess, onBack }) => {
         setError('');
         setLoading(true);
 
-        // Simulate network delay for realism
         setTimeout(() => {
-            const user = USERS.find(u => u.email.toLowerCase() === email.toLowerCase());
+            // Check username OR email
+            const user = USERS.find(u => 
+                u.email.toLowerCase() === identifier.toLowerCase() || 
+                u.username.toLowerCase() === identifier.toLowerCase()
+            );
             
             if (user && user.passwordHash === password) {
                 if (rememberMe) {
@@ -40,7 +43,6 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess, onBack }) => {
 
     return (
         <div className="min-h-screen flex items-center justify-center p-4 relative">
-             {/* Security Background */}
              <div className="absolute inset-0 bg-[#0f172a] overflow-hidden -z-10">
                  <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-blue-500 to-transparent opacity-20"></div>
                  <div className="absolute bottom-0 left-0 w-full h-full bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-5"></div>
@@ -60,15 +62,15 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess, onBack }) => {
 
                 <form onSubmit={handleLogin} className="space-y-6">
                     <div>
-                        <label className="block text-xs font-bold text-blue-200 uppercase tracking-wider mb-2">Email Corporativo</label>
+                        <label className="block text-xs font-bold text-blue-200 uppercase tracking-wider mb-2">Usuario o Email</label>
                         <div className="relative">
-                            <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" size={18} />
+                            <UserIcon className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" size={18} />
                             <input 
-                                type="email" 
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
+                                type="text" 
+                                value={identifier}
+                                onChange={(e) => setIdentifier(e.target.value)}
                                 className="w-full bg-[#0f172a]/50 border border-white/10 rounded-lg py-3 pl-10 pr-4 text-white placeholder-gray-600 focus:outline-none focus:border-blue-500 transition-colors"
-                                placeholder="usuario@empresa.com"
+                                placeholder="Admin o usuario@empresa.com"
                                 required
                             />
                         </div>
@@ -96,7 +98,6 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess, onBack }) => {
                         </div>
                     </div>
 
-                    {/* Remember Me Checkbox */}
                     <div className="flex items-center">
                         <button
                             type="button"

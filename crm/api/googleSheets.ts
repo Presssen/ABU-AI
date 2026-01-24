@@ -92,10 +92,11 @@ export const updateLeadInSheet = async (
                 emails: leadData.emails,
                 nextTask: leadData.nextTask,
                 taskDate: leadData.taskDate,
+                assignedTo: leadData.assignedTo, // ✅ Added for Admin assignment
                 currentIndex: config.currentIndex,
                 filterPlan: config.filterPlan,
                 filterStoreStatus: config.filterStoreStatus,
-                metricToIncrement // Pass this to the backend
+                metricToIncrement 
             })
         });
     } catch (error) {

@@ -1,11 +1,12 @@
 
 import React, { useState, useEffect, useMemo } from 'react';
 import { GlassCard } from '../components/ui/GlassCard';
-import { Phone, Globe, Mail, ArrowRight, CheckCircle, LogOut, Briefcase, Filter, Search, Sparkles, Save, Database, Loader2, AlertTriangle, RefreshCw, Calendar as CalendarIcon, PieChart, Users, ChevronLeft, ChevronRight, Plus, CheckSquare, Lock, Clock, RotateCcw, Settings, Video } from 'lucide-react';
+import { Phone, Globe, Mail, ArrowRight, CheckCircle, LogOut, Briefcase, Filter, Search, Sparkles, Save, Database, Loader2, AlertTriangle, RefreshCw, Calendar as CalendarIcon, PieChart, Users, ChevronLeft, ChevronRight, Plus, CheckSquare, Lock, Clock, RotateCcw, Settings, Video, Shield } from 'lucide-react';
 import { Lead, Region, DashboardStats, ActionType } from './types';
 import { fetchLeadsFromSheet, updateLeadInSheet, saveProgressInSheet, completeTaskInSheet, getApiUrl, setApiUrl } from './api/googleSheets';
 import { StatsView } from './components/StatsView';
 import { TasksView } from './components/TasksView';
+import { AdminPanel } from './components/AdminPanel';
 import { CalendarModal } from './components/CalendarModal';
 import { TaskModal } from './components/TaskModal';
 import { AIEnrichment } from './components/AIEnrichment';
@@ -70,7 +71,7 @@ const formatDate = (dateStr: string) => {
 
 const Dashboard: React.FC<DashboardProps> = ({ currentUser, onLogout }) => {
     // --- State ---
-    const [view, setView] = useState<'leads' | 'stats' | 'tasks'>('leads');
+    const [view, setView] = useState<'leads' | 'stats' | 'tasks' | 'admin'>('leads');
     const [region, setRegion] = useState<Region>('spain');
     const [showFilters, setShowFilters] = useState(false);
     
@@ -108,6 +109,8 @@ const Dashboard: React.FC<DashboardProps> = ({ currentUser, onLogout }) => {
     const [isConfigOpen, setIsConfigOpen] = useState(false);
     const [configUrl, setConfigUrl] = useState('');
 
+    const isAdmin = currentUser === 'Admin';
+
     // --- Derived Data ---
     const uniquePlans = useMemo(() => {
         const plans = new Set(leads.map(l => l.plan ? l.plan.trim() : 'Shopify'));
@@ -125,8 +128,15 @@ const Dashboard: React.FC<DashboardProps> = ({ currentUser, onLogout }) => {
             const leadPlan = lead.plan ? lead.plan.trim() : 'Shopify';
             const leadStoreStatus = lead.storeStatus ? lead.storeStatus.trim() : '';
             const isNotSold = lead.leadStatus !== 'Sale';
+            
+            // Filters
             const matchPlan = filterPlan === 'All' || leadPlan === filterPlan;
             const matchStoreStatus = filterStoreStatus === 'All' || leadStoreStatus === filterStoreStatus;
+            
+            // Assignment Filter: If NOT Admin, only show assigned or unassigned? 
+            // Usually agents see pool or assigned. For now keeping original logic + assignment check if strictly implemented.
+            // But let's keep it simple: Agent sees what matches the global filter unless we enforce strict assignment.
+            
             return matchPlan && matchStoreStatus && isNotSold;
         });
     }, [leads, filterPlan, filterStoreStatus]);
@@ -137,8 +147,11 @@ const Dashboard: React.FC<DashboardProps> = ({ currentUser, onLogout }) => {
     const effectiveLimit = dailyLimit ?? 50; 
     const leadsProcessedToday = Math.max(0, currentIndex - sessionStartIndex);
     const leadsRemainingToday = Math.max(0, effectiveLimit - leadsProcessedToday);
-    const isDailyLimitReached = leadsProcessedToday >= effectiveLimit;
-    const isFinished = (currentIndex >= filteredLeads.length) || (dailyLimit !== null && isDailyLimitReached);
+    
+    // ADMIN PRIVILEGE: No Limit
+    const isDailyLimitReached = isAdmin ? false : leadsProcessedToday >= effectiveLimit;
+    
+    const isFinished = (currentIndex >= filteredLeads.length) || (!isAdmin && dailyLimit !== null && isDailyLimitReached);
     const isEmpty = filteredLeads.length === 0 && !loading && !error;
     const hasRawData = leads.length > 0;
 
@@ -311,7 +324,8 @@ const Dashboard: React.FC<DashboardProps> = ({ currentUser, onLogout }) => {
                 leadStatus: finalStatus,
                 emails: updatedEmails,
                 nextTask: updatedLead.nextTask,
-                taskDate: updatedLead.taskDate
+                taskDate: updatedLead.taskDate,
+                assignedTo: currentLead.assignedTo // Persist current assignment
             },
             {
                 currentIndex: newIndex, 
@@ -432,7 +446,11 @@ const Dashboard: React.FC<DashboardProps> = ({ currentUser, onLogout }) => {
                             </div>
                             <div>
                                 <h1 className="font-bold text-lg leading-none tracking-tight">ABU Manager</h1>
-                                <span className="text-xs text-blue-300 font-medium">{currentUser} • {region === 'spain' ? 'España' : 'México'}</span>
+                                <span className="text-xs text-blue-300 font-medium flex items-center gap-1">
+                                    {currentUser} 
+                                    {isAdmin && <Shield size={10} className="text-yellow-400"/>} 
+                                    • {region === 'spain' ? 'España' : 'México'}
+                                </span>
                             </div>
                         </div>
                         <div className="flex items-center gap-2 md:hidden">
@@ -447,6 +465,9 @@ const Dashboard: React.FC<DashboardProps> = ({ currentUser, onLogout }) => {
                         <button onClick={() => setView('leads')} className={`flex-1 md:flex-none px-4 py-1.5 rounded-md text-sm font-bold transition-all ${view === 'leads' ? 'bg-blue-600 text-white' : 'text-gray-400 hover:text-white'}`}><Users size={16} className="inline mr-2" /> <span className="hidden sm:inline">Leads</span></button>
                         <button onClick={() => setView('stats')} className={`flex-1 md:flex-none px-4 py-1.5 rounded-md text-sm font-bold transition-all ${view === 'stats' ? 'bg-blue-600 text-white' : 'text-gray-400 hover:text-white'}`}><PieChart size={16} className="inline mr-2" /> <span className="hidden sm:inline">Métricas</span></button>
                         <button onClick={() => setView('tasks')} className={`flex-1 md:flex-none px-4 py-1.5 rounded-md text-sm font-bold transition-all ${view === 'tasks' ? 'bg-blue-600 text-white' : 'text-gray-400 hover:text-white'}`}><CheckSquare size={16} className="inline mr-2" /> <span className="hidden sm:inline">Tareas</span></button>
+                        {isAdmin && (
+                            <button onClick={() => setView('admin')} className={`flex-1 md:flex-none px-4 py-1.5 rounded-md text-sm font-bold transition-all ${view === 'admin' ? 'bg-yellow-600 text-white' : 'text-gray-400 hover:text-white'}`}><Shield size={16} className="inline mr-2" /> <span className="hidden sm:inline">Admin</span></button>
+                        )}
                     </div>
 
                     {view === 'leads' && (
@@ -481,13 +502,14 @@ const Dashboard: React.FC<DashboardProps> = ({ currentUser, onLogout }) => {
             </header>
 
             <main className="max-w-6xl mx-auto p-4 md:p-8 flex-grow w-full">
-                {view === 'stats' && <StatsView stats={stats} />}
-                
-                {view === 'tasks' && (
+                {view === 'admin' && isAdmin ? (
+                    <AdminPanel leads={leads} region={region} onUpdate={loadData} />
+                ) : view === 'stats' ? (
+                    <StatsView stats={stats} />
+                ) : view === 'tasks' ? (
                     <TasksView leads={leads} onSelectLead={handleSelectLeadFromTasks} onCompleteTask={handleCompleteTask} />
-                )}
-                
-                {view === 'leads' && (
+                ) : (
+                    // Default Leads View
                     <>
                         <div className="flex justify-between items-end mb-6">
                             <div>
@@ -499,10 +521,11 @@ const Dashboard: React.FC<DashboardProps> = ({ currentUser, onLogout }) => {
                             <div className="text-right">
                                 <div className="text-xs text-gray-400 font-bold uppercase tracking-wider mb-1">Objetivo Diario</div>
                                 <div className="flex items-baseline justify-end gap-1">
-                                    <span className="text-4xl font-bold text-blue-500">{leadsProcessedToday}</span>
-                                    <span className="text-xl text-gray-500 font-medium">/ {dailyLimit === null ? <Loader2 size={16} className="inline animate-spin text-gray-600" /> : dailyLimit}</span>
+                                    <span className={`text-4xl font-bold ${isAdmin ? 'text-yellow-500' : 'text-blue-500'}`}>{leadsProcessedToday}</span>
+                                    {!isAdmin && <span className="text-xl text-gray-500 font-medium">/ {dailyLimit === null ? <Loader2 size={16} className="inline animate-spin text-gray-600" /> : dailyLimit}</span>}
+                                    {isAdmin && <span className="text-xl text-gray-500 font-medium"> (∞)</span>}
                                 </div>
-                                {dailyLimit !== null && <div className="text-xs text-green-400 font-bold mt-1">{leadsRemainingToday} restantes hoy</div>}
+                                {!isAdmin && dailyLimit !== null && <div className="text-xs text-green-400 font-bold mt-1">{leadsRemainingToday} restantes hoy</div>}
                             </div>
                         </div>
 
@@ -556,6 +579,11 @@ const Dashboard: React.FC<DashboardProps> = ({ currentUser, onLogout }) => {
                                                 <div className="flex items-center gap-2 mb-2">
                                                     <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider border ${currentLead.storeStatus === 'Active' ? 'bg-green-500/10 border-green-500/20 text-green-500' : 'bg-red-500/10 border-red-500/20 text-red-500'}`}>Tienda: {currentLead.storeStatus}</span>
                                                     <span className="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-purple-500/10 border border-purple-500/20 text-purple-400">Plan: {currentLead.plan}</span>
+                                                    {currentLead.assignedTo && (
+                                                        <span className="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-blue-500/10 border border-blue-500/20 text-blue-400 flex items-center gap-1">
+                                                            <Users size={10} /> {currentLead.assignedTo}
+                                                        </span>
+                                                    )}
                                                 </div>
                                                 <h2 className="text-3xl md:text-4xl font-bold text-white tracking-tight break-all">{currentLead.domain}</h2>
                                                 <div className="text-sm text-gray-400 mt-1">Alta: {formatDate(currentLead.created)}</div>

@@ -7,6 +7,12 @@ export const USERS: User[] = [
         email: "presen97@gmail.com",
         passwordHash: "Crack",
         role: "agent"
+    },
+    {
+        username: "Admin",
+        email: "admin@abu.com", // Dummy email for login matching logic if needed, or just username
+        passwordHash: "PUTOCRACK",
+        role: "admin"
     }
 ];
 
