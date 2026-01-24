@@ -22,6 +22,7 @@ export interface Lead {
 }
 
 export type Region = 'spain' | 'mexico';
+export type ActionType = 'call' | 'email' | 'meeting' | null;
 
 export interface DashboardStats {
     contacted: number;

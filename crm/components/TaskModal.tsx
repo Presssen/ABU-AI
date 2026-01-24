@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { GlassCard } from '../../components/ui/GlassCard';
-import { X, CheckSquare, Clock, Send, Check, Loader2 } from 'lucide-react';
+import { X, CheckSquare, Clock, Check, Loader2, Phone, Mail, Video } from 'lucide-react';
 
 interface TaskModalProps {
     isOpen: boolean;
@@ -10,23 +10,28 @@ interface TaskModalProps {
     isSaving?: boolean;
 }
 
+type TaskType = 'General' | 'Llamada' | 'Email' | 'Reunión';
+
 export const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, onSave, isSaving = false }) => {
     const [task, setTask] = useState('');
     const [date, setDate] = useState('');
     const [time, setTime] = useState('');
+    const [type, setType] = useState<TaskType>('General');
 
     if (!isOpen) return null;
 
     const handleSave = () => {
         const dateTime = date && time ? `${date}T${time}` : date;
-        onSave(task, dateTime);
-        // We do not clear/close immediately here, we wait for parent to handle it or manually close
-        // But for better UX let's assume success if no error handling prop passed
+        // Prefix the task with the type
+        const finalTask = type === 'General' ? task : `[${type}] ${task}`;
+        onSave(finalTask, dateTime);
+        
         if (!isSaving) {
             setTimeout(() => {
                 setTask('');
                 setDate('');
                 setTime('');
+                setType('General');
                 onClose();
             }, 500);
         }
@@ -46,13 +51,32 @@ export const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, onSave, i
                 </h3>
 
                 <div className="space-y-4 mb-6">
+                    {/* Type Selector */}
+                    <div>
+                        <label className="block text-xs font-bold text-gray-400 mb-2 uppercase">Tipo de Tarea</label>
+                        <div className="grid grid-cols-4 gap-2">
+                            <button onClick={() => setType('General')} className={`p-2 rounded-lg text-xs font-bold flex flex-col items-center gap-1 transition-all ${type === 'General' ? 'bg-white text-black' : 'bg-white/5 text-gray-400 hover:bg-white/10'}`}>
+                                <CheckSquare size={16} /> General
+                            </button>
+                            <button onClick={() => setType('Llamada')} className={`p-2 rounded-lg text-xs font-bold flex flex-col items-center gap-1 transition-all ${type === 'Llamada' ? 'bg-green-500 text-white' : 'bg-white/5 text-gray-400 hover:bg-white/10'}`}>
+                                <Phone size={16} /> Llamada
+                            </button>
+                            <button onClick={() => setType('Email')} className={`p-2 rounded-lg text-xs font-bold flex flex-col items-center gap-1 transition-all ${type === 'Email' ? 'bg-blue-500 text-white' : 'bg-white/5 text-gray-400 hover:bg-white/10'}`}>
+                                <Mail size={16} /> Email
+                            </button>
+                            <button onClick={() => setType('Reunión')} className={`p-2 rounded-lg text-xs font-bold flex flex-col items-center gap-1 transition-all ${type === 'Reunión' ? 'bg-yellow-500 text-black' : 'bg-white/5 text-gray-400 hover:bg-white/10'}`}>
+                                <Video size={16} /> Reunión
+                            </button>
+                        </div>
+                    </div>
+
                     <div>
                         <label className="block text-xs font-bold text-gray-400 mb-2 uppercase">Descripción</label>
                         <textarea 
                             value={task}
                             onChange={(e) => setTask(e.target.value)}
-                            placeholder="Ej: Llamar de nuevo a las 3PM..."
-                            className="w-full h-24 bg-[#0f172a] border border-white/10 rounded-lg p-3 text-white focus:border-purple-500 resize-none" 
+                            placeholder="Ej: Llamar para confirmar presupuesto..."
+                            className="w-full h-20 bg-[#0f172a] border border-white/10 rounded-lg p-3 text-white focus:border-purple-500 resize-none text-sm" 
                         />
                     </div>
                     
@@ -63,7 +87,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, onSave, i
                                 type="date" 
                                 value={date}
                                 onChange={(e) => setDate(e.target.value)}
-                                className="w-full bg-[#0f172a] border border-white/10 rounded-lg p-3 text-white focus:border-purple-500" 
+                                className="w-full bg-[#0f172a] border border-white/10 rounded-lg p-3 text-white focus:border-purple-500 text-sm" 
                             />
                         </div>
                         <div>
@@ -72,7 +96,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({ isOpen, onClose, onSave, i
                                 type="time" 
                                 value={time}
                                 onChange={(e) => setTime(e.target.value)}
-                                className="w-full bg-[#0f172a] border border-white/10 rounded-lg p-3 text-white focus:border-purple-500" 
+                                className="w-full bg-[#0f172a] border border-white/10 rounded-lg p-3 text-white focus:border-purple-500 text-sm" 
                             />
                         </div>
                     </div>
