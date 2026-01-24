@@ -1,10 +1,10 @@
 
 import React, { useState, useEffect, useMemo } from 'react';
 import { GlassCard } from '../components/ui/GlassCard';
-import { Phone, Globe, Mail, ArrowRight, CheckCircle, LogOut, Briefcase, Filter, Search, Sparkles, Save, Database, Loader2, AlertTriangle, RefreshCw, Calendar as CalendarIcon, PieChart, Users, ChevronLeft, ChevronRight, Plus, CheckSquare, Lock } from 'lucide-react';
+import { Phone, Globe, Mail, ArrowRight, CheckCircle, LogOut, Briefcase, Filter, Search, Sparkles, Save, Database, Loader2, AlertTriangle, RefreshCw, Calendar as CalendarIcon, PieChart, Users, ChevronLeft, ChevronRight, Plus, CheckSquare, Lock, Clock, RotateCcw } from 'lucide-react';
 import { Lead, Region, DashboardStats } from './types';
 import { GoogleGenAI } from "@google/genai";
-import { fetchLeadsFromSheet, updateLeadInSheet, saveProgressInSheet } from './api/googleSheets';
+import { fetchLeadsFromSheet, updateLeadInSheet, saveProgressInSheet, completeTaskInSheet } from './api/googleSheets';
 import { StatsView } from './components/StatsView';
 import { TasksView } from './components/TasksView';
 import { CalendarModal } from './components/CalendarModal';
@@ -42,6 +42,7 @@ const Dashboard: React.FC<DashboardProps> = ({ currentUser, onLogout }) => {
     // --- State ---
     const [view, setView] = useState<'leads' | 'stats' | 'tasks'>('leads');
     const [region, setRegion] = useState<Region>('spain');
+    const [showFilters, setShowFilters] = useState(false);
     
     // Data State
     const [leads, setLeads] = useState<Lead[]>([]);
@@ -95,11 +96,14 @@ const Dashboard: React.FC<DashboardProps> = ({ currentUser, onLogout }) => {
         return leads.filter(lead => {
             const leadPlan = lead.plan ? lead.plan.trim() : 'Shopify';
             const leadStoreStatus = lead.storeStatus ? lead.storeStatus.trim() : '';
+            
+            // FILTRO DE VENTA: Si ya es Sale, no lo mostramos en la lista de trabajo
+            const isNotSold = lead.leadStatus !== 'Sale';
 
             const matchPlan = filterPlan === 'All' || leadPlan === filterPlan;
             const matchStoreStatus = filterStoreStatus === 'All' || leadStoreStatus === filterStoreStatus;
             
-            return matchPlan && matchStoreStatus;
+            return matchPlan && matchStoreStatus && isNotSold;
         });
     }, [leads, filterPlan, filterStoreStatus]);
 
@@ -119,11 +123,15 @@ const Dashboard: React.FC<DashboardProps> = ({ currentUser, onLogout }) => {
     const currentNotesHistory = useMemo(() => currentLead ? parseHistory(currentLead.notes).reverse() : [], [currentLead]);
     const currentDatesHistory = useMemo(() => currentLead ? currentLead.lastContact.split(',').filter(Boolean).reverse() : [], [currentLead]);
 
-    // Calculate Stats
+    // Calculate Stats (We use 'leads' here, not 'filteredLeads', so sales are counted even if hidden)
     const stats: DashboardStats = useMemo(() => {
         return {
-            totalLeads: leads.length,
             contacted: leads.filter(l => l.leadStatus !== 'Pending' && l.leadStatus !== '').length,
+            // Logic: Count leads where notes contain "Email" or "Correo"
+            emailsSent: leads.filter(l => {
+                const notesLower = l.notes.toLowerCase();
+                return notesLower.includes('email') || notesLower.includes('correo') || notesLower.includes('mail');
+            }).length,
             meetingsBooked: leads.filter(l => l.leadStatus === 'Meeting').length,
             sales: leads.filter(l => l.leadStatus === 'Sale').length,
             rejected: leads.filter(l => l.leadStatus === 'Rejected').length
@@ -150,7 +158,7 @@ const Dashboard: React.FC<DashboardProps> = ({ currentUser, onLogout }) => {
             
             // Set Configs
             if (result.config) {
-                // Set the limit from B2 (backend)
+                // Set the limit from B3 (backend)
                 setDailyLimit(result.config.dailyLimit);
                 
                 // Set filters if they exist in config
@@ -206,7 +214,8 @@ const Dashboard: React.FC<DashboardProps> = ({ currentUser, onLogout }) => {
         saveProgressInSheet(region, 0, newPlan, newStatus);
     };
 
-    const handleSave = async (advance: boolean, overrideStatus?: string, taskData?: { task: string, date: string }) => {
+    // Modified to handle direction: 'next' | 'prev' | 'stay'
+    const handleSave = async (direction: 'next' | 'prev' | 'stay', overrideStatus?: string, taskData?: { task: string, date: string }) => {
         if (!currentLead) return;
         setIsSaving(true);
 
@@ -228,7 +237,7 @@ const Dashboard: React.FC<DashboardProps> = ({ currentUser, onLogout }) => {
 
         let updatedEmails = currentLead.emails;
         if (newEmail.trim()) {
-            updatedEmails = updatedEmails ? `${updatedEmails}, ${newEmail}` : newEmail;
+            updatedEmails = updatedEmails ? `${updatedEmails}:${newEmail}` : newEmail;
         }
 
         const finalStatus = overrideStatus || leadStatus;
@@ -247,6 +256,14 @@ const Dashboard: React.FC<DashboardProps> = ({ currentUser, onLogout }) => {
         // 3. Update Local State
         setLeads(prev => prev.map(l => l.id === updatedLead.id ? updatedLead : l));
 
+        // Determine new index
+        let newIndex = currentIndex;
+        if (direction === 'next' && !isDailyLimitReached) {
+            newIndex = Math.min(filteredLeads.length - 1, currentIndex + 1);
+        } else if (direction === 'prev') {
+            newIndex = Math.max(0, currentIndex - 1);
+        }
+
         // 4. Send to API
         await updateLeadInSheet(
             region, 
@@ -260,7 +277,7 @@ const Dashboard: React.FC<DashboardProps> = ({ currentUser, onLogout }) => {
                 taskDate: updatedLead.taskDate
             },
             {
-                currentIndex: advance ? currentIndex + 1 : currentIndex,
+                currentIndex: newIndex, // Save the new index to Config B6
                 filterPlan,
                 filterStoreStatus
             }
@@ -269,11 +286,32 @@ const Dashboard: React.FC<DashboardProps> = ({ currentUser, onLogout }) => {
         setIsSaving(false);
         setIsTaskOpen(false); 
         
-        if (advance) {
-            if (!isDailyLimitReached) {
-                setCurrentIndex(prev => prev + 1);
+        // Apply Navigation locally
+        setCurrentIndex(newIndex);
+    };
+
+    const handleCompleteTask = async (leadId: number, taskDescription: string) => {
+        // 1. Update local state immediately
+        setLeads(prev => prev.map(l => {
+            if (l.id === leadId) {
+                // Add completed task to notes history
+                const oldNotesList = parseHistory(l.notes);
+                const today = new Date().toISOString().split('T')[0];
+                const newNote = `[✅ TAREA COMPLETADA ${today}] ${taskDescription}`;
+                const updatedNotes = JSON.stringify([...oldNotesList, newNote]);
+                
+                return {
+                    ...l,
+                    nextTask: '', // Clear task
+                    taskDate: '', // Clear date
+                    notes: updatedNotes
+                };
             }
-        }
+            return l;
+        }));
+
+        // 2. Call API to persist
+        await completeTaskInSheet(region, leadId, taskDescription);
     };
 
     const handleAIPhoneSearch = async () => {
@@ -292,12 +330,15 @@ const Dashboard: React.FC<DashboardProps> = ({ currentUser, onLogout }) => {
     };
 
     const handleScheduleMeeting = (date: string, time: string) => {
+        const dateTime = `${date}T${time}`;
         setNewNote(prev => `${prev}\n\n📅 Reunión agendada: ${date} a las ${time}. (Email enviado)`);
-        handleSave(false, 'Meeting');
+        
+        // Auto-create task for the meeting so it appears in the ToDo register
+        handleSave('stay', 'Meeting', { task: `Reunión: ${currentLead.domain}`, date: dateTime });
     };
 
     const handleCreateTask = (task: string, date: string) => {
-        handleSave(false, undefined, { task, date });
+        handleSave('stay', undefined, { task, date });
     };
 
     const handleSelectLeadFromTasks = (leadId: number) => {
@@ -305,6 +346,8 @@ const Dashboard: React.FC<DashboardProps> = ({ currentUser, onLogout }) => {
         if (index !== -1) {
             setCurrentIndex(index);
             setView('leads');
+        } else {
+            alert("El lead seleccionado no está visible en los filtros actuales o ya es una Venta.");
         }
     };
 
@@ -318,59 +361,75 @@ const Dashboard: React.FC<DashboardProps> = ({ currentUser, onLogout }) => {
     }
 
     return (
-        <div className="min-h-screen bg-[#0f172a] text-white font-sans">
-            <header className="bg-[#1e293b] border-b border-white/10 px-6 py-4 sticky top-0 z-50 shadow-xl">
+        <div className="min-h-screen bg-[#0f172a] text-white font-sans flex flex-col">
+            <header className="bg-[#1e293b] border-b border-white/10 px-4 md:px-6 py-4 sticky top-0 z-50 shadow-xl">
                 <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
-                    <div className="flex items-center gap-3">
-                        <div className="p-2 bg-blue-600 rounded-lg shadow-lg shadow-blue-500/20">
-                            <Briefcase size={20} className="text-white" />
+                    <div className="w-full md:w-auto flex justify-between items-center">
+                        <div className="flex items-center gap-3">
+                            <div className="p-2 bg-blue-600 rounded-lg shadow-lg shadow-blue-500/20">
+                                <Briefcase size={20} className="text-white" />
+                            </div>
+                            <div>
+                                <h1 className="font-bold text-lg leading-none tracking-tight">ABU Manager</h1>
+                                <span className="text-xs text-blue-300 font-medium">{currentUser} • {region === 'spain' ? 'España' : 'México'}</span>
+                            </div>
                         </div>
-                        <div>
-                            <h1 className="font-bold text-lg leading-none tracking-tight">ABU Manager</h1>
-                            <span className="text-xs text-blue-300 font-medium">{currentUser} • {region === 'spain' ? 'España' : 'México'}</span>
-                        </div>
+                        {/* Mobile Toggle for Filters */}
+                        {view === 'leads' && (
+                             <button onClick={() => setShowFilters(!showFilters)} className="md:hidden p-2 text-gray-400 hover:text-white bg-white/5 rounded-lg">
+                                <Filter size={20} />
+                             </button>
+                        )}
                     </div>
 
-                    <div className="flex bg-[#0f172a] p-1 rounded-lg border border-white/10">
-                        <button onClick={() => setView('leads')} className={`px-4 py-1.5 rounded-md text-sm font-bold transition-all ${view === 'leads' ? 'bg-blue-600 text-white' : 'text-gray-400 hover:text-white'}`}><Users size={16} className="inline mr-2" /> Leads</button>
-                        <button onClick={() => setView('stats')} className={`px-4 py-1.5 rounded-md text-sm font-bold transition-all ${view === 'stats' ? 'bg-blue-600 text-white' : 'text-gray-400 hover:text-white'}`}><PieChart size={16} className="inline mr-2" /> Métricas</button>
-                        <button onClick={() => setView('tasks')} className={`px-4 py-1.5 rounded-md text-sm font-bold transition-all ${view === 'tasks' ? 'bg-blue-600 text-white' : 'text-gray-400 hover:text-white'}`}><CheckSquare size={16} className="inline mr-2" /> Tareas</button>
+                    <div className="flex bg-[#0f172a] p-1 rounded-lg border border-white/10 w-full md:w-auto justify-center md:justify-start">
+                        <button onClick={() => setView('leads')} className={`flex-1 md:flex-none px-4 py-1.5 rounded-md text-sm font-bold transition-all ${view === 'leads' ? 'bg-blue-600 text-white' : 'text-gray-400 hover:text-white'}`}><Users size={16} className="inline mr-2" /> <span className="hidden sm:inline">Leads</span></button>
+                        <button onClick={() => setView('stats')} className={`flex-1 md:flex-none px-4 py-1.5 rounded-md text-sm font-bold transition-all ${view === 'stats' ? 'bg-blue-600 text-white' : 'text-gray-400 hover:text-white'}`}><PieChart size={16} className="inline mr-2" /> <span className="hidden sm:inline">Métricas</span></button>
+                        <button onClick={() => setView('tasks')} className={`flex-1 md:flex-none px-4 py-1.5 rounded-md text-sm font-bold transition-all ${view === 'tasks' ? 'bg-blue-600 text-white' : 'text-gray-400 hover:text-white'}`}><CheckSquare size={16} className="inline mr-2" /> <span className="hidden sm:inline">Tareas</span></button>
                     </div>
 
+                    {/* Desktop Filters (Always visible on MD+) / Mobile Filters (Toggled) */}
                     {view === 'leads' && (
-                        <div className="flex flex-wrap items-center gap-4 bg-[#0f172a]/50 p-2 rounded-xl border border-white/5">
+                        <div className={`${showFilters ? 'flex' : 'hidden'} md:flex flex-col md:flex-row w-full md:w-auto items-stretch md:items-center gap-4 bg-[#0f172a]/50 p-2 rounded-xl border border-white/5`}>
                             <div className="flex items-center gap-2 px-2 border-r border-white/10">
                                 <Database size={16} className="text-gray-400" />
-                                <select value={region} onChange={(e) => setRegion(e.target.value as Region)} className="bg-transparent text-sm font-bold text-white focus:outline-none cursor-pointer hover:text-blue-300">
+                                <select value={region} onChange={(e) => setRegion(e.target.value as Region)} className="bg-transparent text-sm font-bold text-white focus:outline-none cursor-pointer hover:text-blue-300 w-full md:w-auto">
                                     <option value="spain">España</option>
                                     <option value="mexico">México</option>
                                 </select>
                             </div>
                             <div className="flex items-center gap-2">
-                                <span className="text-xs text-gray-500 uppercase font-bold">Plan:</span>
-                                <select value={filterPlan} onChange={(e) => handleFilterChange('plan', e.target.value)} className="bg-white/5 border border-white/10 rounded-md text-xs py-1 px-2 text-white">
+                                <span className="text-xs text-gray-500 uppercase font-bold whitespace-nowrap">Plan:</span>
+                                <select value={filterPlan} onChange={(e) => handleFilterChange('plan', e.target.value)} className="w-full md:w-auto bg-white/5 border border-white/10 rounded-md text-xs py-1 px-2 text-white">
                                     {uniquePlans.map(p => <option key={p} value={p}>{p}</option>)}
                                 </select>
                             </div>
                             <div className="flex items-center gap-2">
-                                <span className="text-xs text-gray-500 uppercase font-bold">Tienda:</span>
-                                <select value={filterStoreStatus} onChange={(e) => handleFilterChange('storeStatus', e.target.value)} className="bg-white/5 border border-white/10 rounded-md text-xs py-1 px-2 text-white">
+                                <span className="text-xs text-gray-500 uppercase font-bold whitespace-nowrap">Tienda:</span>
+                                <select value={filterStoreStatus} onChange={(e) => handleFilterChange('storeStatus', e.target.value)} className="w-full md:w-auto bg-white/5 border border-white/10 rounded-md text-xs py-1 px-2 text-white">
                                     {uniqueStoreStatuses.map(s => <option key={s} value={s}>{s}</option>)}
                                 </select>
                             </div>
                         </div>
                     )}
                     
-                    <button onClick={onLogout} className="p-2 hover:bg-white/10 rounded-lg text-gray-400 hover:text-red-400 transition-colors ml-auto md:ml-0">
+                    {/* Desktop Logout - Hidden on Mobile */}
+                    <button onClick={onLogout} className="hidden md:block p-2 hover:bg-white/10 rounded-lg text-gray-400 hover:text-red-400 transition-colors ml-auto md:ml-0">
                         <LogOut size={20} />
                     </button>
                 </div>
             </header>
 
-            <main className="max-w-6xl mx-auto p-4 md:p-8">
+            <main className="max-w-6xl mx-auto p-4 md:p-8 flex-grow w-full">
                 {view === 'stats' && <StatsView stats={stats} />}
                 
-                {view === 'tasks' && <TasksView leads={leads} onSelectLead={handleSelectLeadFromTasks} />}
+                {view === 'tasks' && (
+                    <TasksView 
+                        leads={leads} 
+                        onSelectLead={handleSelectLeadFromTasks} 
+                        onCompleteTask={handleCompleteTask} 
+                    />
+                )}
                 
                 {view === 'leads' && (
                     <>
@@ -382,7 +441,7 @@ const Dashboard: React.FC<DashboardProps> = ({ currentUser, onLogout }) => {
                                 <p className="text-gray-400 text-sm">Filtrado: {filteredLeads.length} leads</p>
                             </div>
                             <div className="text-right">
-                                <div className="text-xs text-gray-400 font-bold uppercase tracking-wider mb-1">Objetivo Diario (B2)</div>
+                                <div className="text-xs text-gray-400 font-bold uppercase tracking-wider mb-1">Objetivo Diario (B3)</div>
                                 <div className="flex items-baseline justify-end gap-1">
                                     <span className="text-4xl font-bold text-blue-500">{leadsProcessedToday}</span>
                                     <span className="text-xl text-gray-500 font-medium">/ {dailyLimit === null ? <Loader2 size={16} className="inline animate-spin text-gray-600" /> : dailyLimit}</span>
@@ -408,6 +467,17 @@ const Dashboard: React.FC<DashboardProps> = ({ currentUser, onLogout }) => {
                                         <div className="w-20 h-20 bg-yellow-500/20 rounded-full flex items-center justify-center mx-auto mb-6"><Lock size={40} className="text-yellow-500" /></div>
                                         <h2 className="text-3xl font-bold mb-4">Límite Diario Alcanzado</h2>
                                         <p className="text-gray-400 mb-8">Has completado tu objetivo de {effectiveLimit} leads por hoy.</p>
+                                        
+                                        <div className="flex flex-col md:flex-row gap-4 justify-center">
+                                            {/* Button to review leads again */}
+                                            <button 
+                                                onClick={() => setCurrentIndex(sessionStartIndex)} 
+                                                className="px-6 py-3 bg-white/10 hover:bg-white/20 rounded-xl text-white font-bold transition-colors flex items-center justify-center gap-2"
+                                            >
+                                                <RotateCcw size={18} />
+                                                Revisar Leads de Hoy
+                                            </button>
+                                        </div>
                                     </>
                                 ) : (
                                     <>
@@ -421,6 +491,33 @@ const Dashboard: React.FC<DashboardProps> = ({ currentUser, onLogout }) => {
                         ) : (
                             <div className="grid lg:grid-cols-3 gap-6">
                                 <div className="lg:col-span-2 space-y-6">
+                                    
+                                    {/* Task Alert Section - Show only if task exists */}
+                                    {currentLead.nextTask && (
+                                        <div className="bg-purple-500/10 border-l-4 border-purple-500 p-4 rounded-r-xl mb-2 flex justify-between items-start animate-in slide-in-from-left-2">
+                                            <div>
+                                                <div className="text-xs font-bold text-purple-300 uppercase tracking-wider mb-1 flex items-center gap-2">
+                                                    <CheckSquare size={12} />
+                                                    Tarea Pendiente
+                                                </div>
+                                                <div className="text-white font-medium text-sm">{currentLead.nextTask}</div>
+                                                {currentLead.taskDate && (
+                                                    <div className="text-gray-400 text-xs mt-1 flex items-center gap-1">
+                                                        <Clock size={10} />
+                                                        {new Date(currentLead.taskDate).toLocaleString()}
+                                                    </div>
+                                                )}
+                                            </div>
+                                            <button 
+                                                onClick={() => handleCompleteTask(currentLead.id, currentLead.nextTask!)}
+                                                className="p-2 bg-purple-500/20 hover:bg-green-500/20 text-purple-300 hover:text-green-400 rounded-lg transition-colors"
+                                                title="Completar Tarea"
+                                            >
+                                                <CheckCircle size={20} />
+                                            </button>
+                                        </div>
+                                    )}
+
                                     <GlassCard className="p-8 border-t-4 border-t-blue-500 shadow-2xl relative overflow-hidden">
                                         <div className="flex justify-between items-start mb-8">
                                             <div>
@@ -444,8 +541,19 @@ const Dashboard: React.FC<DashboardProps> = ({ currentUser, onLogout }) => {
                                                 <div className="flex items-start gap-4 mb-2">
                                                     <div className="p-2 bg-orange-500/10 rounded-lg text-orange-400"><Mail size={20} /></div>
                                                     <div className="flex-grow">
-                                                        <label className="block text-[10px] uppercase font-bold text-gray-500 mb-1">Emails</label>
-                                                        <div className="text-white break-all">{currentLead.emails}</div>
+                                                        <label className="block text-[10px] uppercase font-bold text-gray-500 mb-2">Emails</label>
+                                                        <div className="flex flex-col gap-2">
+                                                            {currentLead.emails && currentLead.emails.trim() !== '' ? (
+                                                                currentLead.emails.split(':').map((email, idx) => (
+                                                                    <div key={idx} className="bg-white/5 px-3 py-1.5 rounded-lg border border-white/5 text-white text-sm break-all flex items-center justify-between group">
+                                                                        <span>{email.trim()}</span>
+                                                                        <a href={`mailto:${email.trim()}`} className="opacity-0 group-hover:opacity-100 text-blue-400 hover:text-blue-300 transition-opacity"><Mail size={14}/></a>
+                                                                    </div>
+                                                                ))
+                                                            ) : (
+                                                                <div className="text-gray-500 italic text-sm">Sin emails</div>
+                                                            )}
+                                                        </div>
                                                     </div>
                                                     <button onClick={() => setShowAddEmail(!showAddEmail)} className="p-2 hover:bg-white/10 rounded-lg text-gray-400 hover:text-white" title="Añadir Email"><Plus size={16} /></button>
                                                 </div>
@@ -521,13 +629,28 @@ const Dashboard: React.FC<DashboardProps> = ({ currentUser, onLogout }) => {
                                             </div>
                                             <div className="grid grid-cols-2 gap-2">
                                                 <button onClick={() => setIsCalendarOpen(true)} className="p-3 bg-yellow-500/10 hover:bg-yellow-500/20 border border-yellow-500/30 rounded-xl flex flex-col items-center justify-center text-yellow-400 transition-colors"><CalendarIcon size={20} className="mb-1" /><span className="text-xs font-bold">Agendar</span></button>
-                                                <button onClick={() => { setLeadStatus('Sale'); handleSave(true, 'Sale'); }} className="p-3 bg-green-500/10 hover:bg-green-500/20 border border-green-500/30 rounded-xl flex flex-col items-center justify-center text-green-400 transition-colors"><CheckCircle size={20} className="mb-1" /><span className="text-xs font-bold">Venta</span></button>
+                                                <button onClick={() => { setLeadStatus('Sale'); handleSave('next', 'Sale'); }} className="p-3 bg-green-500/10 hover:bg-green-500/20 border border-green-500/30 rounded-xl flex flex-col items-center justify-center text-green-400 transition-colors"><CheckCircle size={20} className="mb-1" /><span className="text-xs font-bold">Venta</span></button>
                                                 <button onClick={() => setIsTaskOpen(true)} className="col-span-2 p-3 bg-purple-500/10 hover:bg-purple-500/20 border border-purple-500/30 rounded-xl flex items-center justify-center gap-2 text-purple-400 transition-colors"><CheckSquare size={16} /><span className="text-xs font-bold">Crear Tarea / Recordatorio</span></button>
                                             </div>
                                         </div>
-                                        <button onClick={() => handleSave(true)} disabled={isSaving} className="w-full mt-6 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white font-bold py-4 rounded-xl flex items-center justify-center gap-2 transition-all shadow-lg transform active:scale-95 disabled:opacity-50 disabled:cursor-wait">
-                                            {isSaving ? <Loader2 size={20} className="animate-spin" /> : <><span>Guardar y Siguiente</span><ArrowRight size={20} /></>}
-                                        </button>
+                                        
+                                        {/* Dual Navigation Buttons */}
+                                        <div className="grid grid-cols-2 gap-3 mt-6">
+                                            <button 
+                                                onClick={() => handleSave('prev')} 
+                                                disabled={isSaving || currentIndex === 0}
+                                                className="w-full bg-white/10 hover:bg-white/20 text-white font-bold py-4 rounded-xl flex items-center justify-center gap-2 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                                            >
+                                                {isSaving ? <Loader2 size={20} className="animate-spin" /> : <><ChevronLeft size={20} /><span>Anterior</span></>}
+                                            </button>
+                                            <button 
+                                                onClick={() => handleSave('next')} 
+                                                disabled={isSaving}
+                                                className="w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white font-bold py-4 rounded-xl flex items-center justify-center gap-2 transition-all shadow-lg transform active:scale-95 disabled:opacity-50 disabled:cursor-wait"
+                                            >
+                                                {isSaving ? <Loader2 size={20} className="animate-spin" /> : <><span>Siguiente</span><ArrowRight size={20} /></>}
+                                            </button>
+                                        </div>
                                     </GlassCard>
                                 </div>
                             </div>
@@ -535,8 +658,16 @@ const Dashboard: React.FC<DashboardProps> = ({ currentUser, onLogout }) => {
                     </>
                 )}
             </main>
+            
+            {/* Mobile Footer for Logout */}
+            <div className="md:hidden sticky bottom-0 w-full bg-[#1e293b] border-t border-white/10 p-4 z-40 flex justify-center">
+                 <button onClick={onLogout} className="flex items-center gap-2 text-red-400 font-bold hover:text-red-300 transition-colors">
+                     <LogOut size={20} />
+                     <span>Cerrar Sesión</span>
+                 </button>
+            </div>
 
-            <CalendarModal isOpen={isCalendarOpen} onClose={() => setIsCalendarOpen(false)} leadEmail={currentLead?.emails?.split(',')[0] || ''} onSchedule={handleScheduleMeeting} />
+            <CalendarModal isOpen={isCalendarOpen} onClose={() => setIsCalendarOpen(false)} leadEmail={currentLead?.emails?.split(':')[0] || ''} onSchedule={handleScheduleMeeting} />
             
             {/* Pass isSaving to show loading state in modal too */}
             <TaskModal isOpen={isTaskOpen} onClose={() => setIsTaskOpen(false)} onSave={handleCreateTask} isSaving={isSaving} />

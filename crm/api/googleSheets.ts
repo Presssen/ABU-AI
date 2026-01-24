@@ -68,6 +68,28 @@ export const updateLeadInSheet = async (
     }
 };
 
+export const completeTaskInSheet = async (
+    region: Region,
+    leadId: number,
+    taskCompleted: string
+) => {
+    if (!API_URL || API_URL.includes("YOUR_GOOGLE_APPS_SCRIPT")) return;
+
+    try {
+        await fetch(API_URL, {
+            method: "POST",
+            body: JSON.stringify({
+                action: 'complete_task',
+                region,
+                leadId,
+                taskCompleted
+            })
+        });
+    } catch (error) {
+        console.error("Error completing task:", error);
+    }
+};
+
 export const saveProgressInSheet = async (
     region: Region, 
     currentIndex: number,

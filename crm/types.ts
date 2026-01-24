@@ -24,8 +24,8 @@ export interface Lead {
 export type Region = 'spain' | 'mexico';
 
 export interface DashboardStats {
-    totalLeads: number;
     contacted: number;
+    emailsSent: number;
     meetingsBooked: number;
     sales: number;
     rejected: number;
