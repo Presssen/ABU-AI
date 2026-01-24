@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Language, ViewState } from './types';
 import { CONTENT } from './constants';
 import Navbar from './components/Navbar';
@@ -32,12 +32,23 @@ function App() {
 
   const text = CONTENT[lang];
 
+  // Check for saved session on mount
+  useEffect(() => {
+    const savedUser = localStorage.getItem('abu_crm_user');
+    if (savedUser) {
+        setCurrentUser(savedUser);
+        setView('dashboard');
+    }
+  }, []);
+
   const handleLoginSuccess = (username: string) => {
       setCurrentUser(username);
       setView('dashboard');
   };
 
   const handleLogout = () => {
+      // Remove saved session
+      localStorage.removeItem('abu_crm_user');
       setCurrentUser(null);
       setView('landing');
   };

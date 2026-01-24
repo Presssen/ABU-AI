@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Lock, Mail, ArrowRight, ShieldCheck, Eye, EyeOff } from 'lucide-react';
+import { Lock, Mail, ArrowRight, ShieldCheck, Eye, EyeOff, Check } from 'lucide-react';
 import { GlassCard } from '../../components/ui/GlassCard';
 import { USERS } from '../data/mockData';
 
@@ -13,6 +13,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess, onBack }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
+    const [rememberMe, setRememberMe] = useState(false);
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
 
@@ -26,6 +27,9 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess, onBack }) => {
             const user = USERS.find(u => u.email.toLowerCase() === email.toLowerCase());
             
             if (user && user.passwordHash === password) {
+                if (rememberMe) {
+                    localStorage.setItem('abu_crm_user', user.username);
+                }
                 onLoginSuccess(user.username);
             } else {
                 setError('Credenciales incorrectas. Acceso denegado.');
@@ -90,6 +94,24 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess, onBack }) => {
                                 {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                             </button>
                         </div>
+                    </div>
+
+                    {/* Remember Me Checkbox */}
+                    <div className="flex items-center">
+                        <button
+                            type="button"
+                            onClick={() => setRememberMe(!rememberMe)}
+                            className={`flex items-center justify-center w-5 h-5 rounded border mr-2 transition-all ${rememberMe ? 'bg-blue-600 border-blue-500' : 'bg-[#0f172a]/50 border-gray-600'}`}
+                        >
+                            {rememberMe && <Check size={14} className="text-white" />}
+                        </button>
+                        <button 
+                            type="button"
+                            onClick={() => setRememberMe(!rememberMe)}
+                            className="text-sm text-gray-400 hover:text-gray-300"
+                        >
+                            Mantener sesión iniciada
+                        </button>
                     </div>
 
                     {error && (

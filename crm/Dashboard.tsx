@@ -49,7 +49,8 @@ const Dashboard: React.FC<DashboardProps> = ({ currentUser, onLogout }) => {
     const [isSaving, setIsSaving] = useState(false);
     
     // Config & Limits
-    const [dailyLimit, setDailyLimit] = useState(50);
+    // Initialize as null to distinguish between "not loaded" and "value 0"
+    const [dailyLimit, setDailyLimit] = useState<number | null>(null);
     const [sessionStartIndex, setSessionStartIndex] = useState(0);
 
     // Filters
@@ -105,13 +106,12 @@ const Dashboard: React.FC<DashboardProps> = ({ currentUser, onLogout }) => {
     const currentLead = filteredLeads[currentIndex];
     
     // Logic for Daily Limit
-    // We calculate "Processed Today" based on how many leads the user has moved through in this session
-    // relative to where they started.
+    const effectiveLimit = dailyLimit ?? 50; // Fallback for calculation safety
     const leadsProcessedToday = Math.max(0, currentIndex - sessionStartIndex);
-    const leadsRemainingToday = Math.max(0, dailyLimit - leadsProcessedToday);
+    const leadsRemainingToday = Math.max(0, effectiveLimit - leadsProcessedToday);
     
-    const isDailyLimitReached = leadsProcessedToday >= dailyLimit;
-    const isFinished = (currentIndex >= filteredLeads.length) || isDailyLimitReached;
+    const isDailyLimitReached = leadsProcessedToday >= effectiveLimit;
+    const isFinished = (currentIndex >= filteredLeads.length) || (dailyLimit !== null && isDailyLimitReached);
     
     const isEmpty = filteredLeads.length === 0 && !loading;
 
@@ -135,6 +135,9 @@ const Dashboard: React.FC<DashboardProps> = ({ currentUser, onLogout }) => {
     useEffect(() => {
         const loadData = async () => {
             setLoading(true);
+            // Reset limit to null while loading new region data
+            setDailyLimit(null);
+            
             const result = await fetchLeadsFromSheet(region);
             
             // Apply Plan Default Logic: If empty, set to 'Shopify'
@@ -147,7 +150,8 @@ const Dashboard: React.FC<DashboardProps> = ({ currentUser, onLogout }) => {
             
             // Set Configs
             if (result.config) {
-                setDailyLimit(result.config.dailyLimit || 50);
+                // Set the limit from B2 (backend)
+                setDailyLimit(result.config.dailyLimit);
                 
                 // Set filters if they exist in config
                 if (result.config.filterPlan) setFilterPlan(result.config.filterPlan);
@@ -155,23 +159,18 @@ const Dashboard: React.FC<DashboardProps> = ({ currentUser, onLogout }) => {
                 
                 const savedIdx = result.config.index || 0;
                 
-                // Logic to restore position:
-                // If the saved filters match the current default, we assume we are resuming
-                // We set the session start index to the saved index so the daily counter starts at 0/50 relative to *today's start*
-                // NOTE: This assumes 'savedIdx' is the global index. 
-                
                 const safeIndex = Math.min(savedIdx, Math.max(0, processedLeads.length - 1));
                 
-                // Only restore index if we are in 'All' or if the saved filters match the logic
-                // For simplicity, we restore index relative to the loaded list
                 if (result.config.filterPlan === 'All' && result.config.filterStoreStatus === 'All') {
                      setCurrentIndex(safeIndex);
                      setSessionStartIndex(safeIndex); 
                 } else {
-                    // If filters are active, we start at 0 of that filtered view
                     setCurrentIndex(0);
                     setSessionStartIndex(0);
                 }
+            } else {
+                // Fallback if config fails
+                setDailyLimit(50);
             }
 
             setLoading(false);
@@ -261,10 +260,6 @@ const Dashboard: React.FC<DashboardProps> = ({ currentUser, onLogout }) => {
                 taskDate: updatedLead.taskDate
             },
             {
-                // Only save index if we advance. We save the GLOBAL index (lead.id) or the Filtered Index?
-                // The backend expects an index to save to Config B[UserRow]. 
-                // We usually save the *absolute* index or the current filtered index depending on how we want to resume.
-                // For safety in this simpler app, we save the currentIndex of the *current view*.
                 currentIndex: advance ? currentIndex + 1 : currentIndex,
                 filterPlan,
                 filterStoreStatus
@@ -387,14 +382,16 @@ const Dashboard: React.FC<DashboardProps> = ({ currentUser, onLogout }) => {
                                 <p className="text-gray-400 text-sm">Filtrado: {filteredLeads.length} leads</p>
                             </div>
                             <div className="text-right">
-                                <div className="text-xs text-gray-400 font-bold uppercase tracking-wider mb-1">Progreso Diario</div>
+                                <div className="text-xs text-gray-400 font-bold uppercase tracking-wider mb-1">Objetivo Diario (B2)</div>
                                 <div className="flex items-baseline justify-end gap-1">
                                     <span className="text-4xl font-bold text-blue-500">{leadsProcessedToday}</span>
-                                    <span className="text-xl text-gray-500 font-medium">/ {dailyLimit}</span>
+                                    <span className="text-xl text-gray-500 font-medium">/ {dailyLimit === null ? <Loader2 size={16} className="inline animate-spin text-gray-600" /> : dailyLimit}</span>
                                 </div>
-                                <div className="text-xs text-green-400 font-bold mt-1">
-                                    {leadsRemainingToday} restantes hoy
-                                </div>
+                                {dailyLimit !== null && (
+                                    <div className="text-xs text-green-400 font-bold mt-1">
+                                        {leadsRemainingToday} restantes hoy
+                                    </div>
+                                )}
                             </div>
                         </div>
 
@@ -410,7 +407,7 @@ const Dashboard: React.FC<DashboardProps> = ({ currentUser, onLogout }) => {
                                     <>
                                         <div className="w-20 h-20 bg-yellow-500/20 rounded-full flex items-center justify-center mx-auto mb-6"><Lock size={40} className="text-yellow-500" /></div>
                                         <h2 className="text-3xl font-bold mb-4">Límite Diario Alcanzado</h2>
-                                        <p className="text-gray-400 mb-8">Has completado tu objetivo de {dailyLimit} leads por hoy.</p>
+                                        <p className="text-gray-400 mb-8">Has completado tu objetivo de {effectiveLimit} leads por hoy.</p>
                                     </>
                                 ) : (
                                     <>
