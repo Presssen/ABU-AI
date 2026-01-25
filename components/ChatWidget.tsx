@@ -27,8 +27,9 @@ const ChatWidget: React.FC<ChatWidgetProps> = ({ lang, content }) => {
   // Initialize Chat Session
   useEffect(() => {
     try {
-      if (process.env.API_KEY) {
-        const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+      const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
+      if (apiKey) {
+        const ai = new GoogleGenAI({ apiKey });
         
         const systemInstruction = `
           You are a helpful, friendly, and professional customer support agent for the app "ABU - Upsell & Cross-sell".

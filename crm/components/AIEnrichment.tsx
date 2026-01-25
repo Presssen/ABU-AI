@@ -14,12 +14,13 @@ export const AIEnrichment: React.FC<AIEnrichmentProps> = ({ domain }) => {
     const [searched, setSearched] = useState(false);
 
     const handleSearch = async () => {
-        if (!process.env.API_KEY) return;
+        const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
+        if (!apiKey) return;
         setLoading(true);
         setSearched(true);
         
         try {
-            const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+            const ai = new GoogleGenAI({ apiKey });
             
             const prompt = `
                 Analyze the company associated with the domain: ${domain}.
