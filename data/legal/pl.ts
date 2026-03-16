@@ -7,7 +7,7 @@ export const LEGAL_PL = {
     sections: [
       {
         heading: "1. Wstęp",
-        content: "Tiendamanilla S.L. z siedzibą w Bizkaia, Hiszpania, jest operatorem aplikacji ABU."
+        content: "ABU Corp z siedzibą w Bizkaia, Hiszpania, jest operatorem aplikacji ABU."
       },
       {
         heading: "2. Gromadzenie Danych",
@@ -38,7 +38,7 @@ export const LEGAL_PL = {
       },
       {
         heading: "3. Odpowiedzialność",
-        content: "Tiendamanilla S.L. nie ponosi odpowiedzialności za szkody pośrednie."
+        content: "ABU Corp nie ponosi odpowiedzialności za szkody pośrednie."
       },
       {
         heading: "4. Prawo",

@@ -7,7 +7,7 @@ export const LEGAL_JA = {
     sections: [
       {
         heading: "1. はじめに",
-        content: "Tiendamanilla S.L.（スペイン、ビスカヤ）は、ABUアプリを運営しています。"
+        content: "ABU Corp（スペイン、ビスカヤ）は、ABUアプリを運営しています。"
       },
       {
         heading: "2. データ収集",
@@ -38,7 +38,7 @@ export const LEGAL_JA = {
       },
       {
         heading: "3. 免責",
-        content: "Tiendamanilla S.L.は間接的な損害について責任を負いません。"
+        content: "ABU Corpは間接的な損害について責任を負いません。"
       },
       {
         heading: "4. 準拠法",

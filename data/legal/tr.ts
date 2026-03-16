@@ -7,7 +7,7 @@ export const LEGAL_TR = {
     sections: [
       {
         heading: "1. Giriş",
-        content: "Tiendamanilla S.L., Bizkaia, İspanya, ABU uygulamasını işletmektedir."
+        content: "ABU Corp, Bizkaia, İspanya, ABU uygulamasını işletmektedir."
       },
       {
         heading: "2. Veri Toplama",
@@ -38,7 +38,7 @@ export const LEGAL_TR = {
       },
       {
         heading: "3. Sorumluluk",
-        content: "Tiendamanilla S.L. dolaylı zararlardan sorumlu değildir."
+        content: "ABU Corp dolaylı zararlardan sorumlu değildir."
       },
       {
         heading: "4. Hukuk",

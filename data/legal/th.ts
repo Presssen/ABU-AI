@@ -7,7 +7,7 @@ export const LEGAL_TH = {
     sections: [
       {
         heading: "1. บทนำ",
-        content: "Tiendamanilla S.L. (สเปน) เป็นผู้ให้บริการแอป ABU"
+        content: "ABU Corp (สเปน) เป็นผู้ให้บริการแอป ABU"
       },
       {
         heading: "2. การเก็บรวบรวมข้อมูล",
@@ -38,7 +38,7 @@ export const LEGAL_TH = {
       },
       {
         heading: "3. ข้อจำกัดความรับผิด",
-        content: "Tiendamanilla S.L. ไม่รับผิดชอบต่อความเสียหายทางอ้อม"
+        content: "ABU Corp ไม่รับผิดชอบต่อความเสียหายทางอ้อม"
       },
       {
         heading: "4. กฎหมาย",

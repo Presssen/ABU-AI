@@ -7,7 +7,7 @@ export const LEGAL_DE = {
     sections: [
       {
         heading: "1. Einführung",
-        content: "Tiendamanilla S.L. ('Unternehmen', 'wir'), mit Sitz in Bizkaia, Spanien, betreibt die ABU Shopify App. Diese Richtlinie beschreibt, wie wir Ihre Daten erfassen und nutzen."
+        content: "ABU Corp ('Unternehmen', 'wir'), mit Sitz in Bizkaia, Spanien, betreibt die ABU Shopify App. Diese Richtlinie beschreibt, wie wir Ihre Daten erfassen und nutzen."
       },
       {
         heading: "2. Datenerfassung",
@@ -38,7 +38,7 @@ export const LEGAL_DE = {
       },
       {
         heading: "3. Haftungsbeschränkung",
-        content: "Tiendamanilla S.L. haftet nicht für indirekte Schäden, Datenverlust oder entgangenen Gewinn."
+        content: "ABU Corp haftet nicht für indirekte Schäden, Datenverlust oder entgangenen Gewinn."
       },
       {
         heading: "4. Anwendbares Recht",

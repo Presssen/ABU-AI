@@ -7,7 +7,7 @@ export const LEGAL_CS = {
     sections: [
       {
         heading: "1. Úvod",
-        content: "Tiendamanilla S.L., Bizkaia, Španělsko, provozuje aplikaci ABU."
+        content: "ABU Corp, Bizkaia, Španělsko, provozuje aplikaci ABU."
       },
       {
         heading: "2. Sběr dat",
@@ -38,7 +38,7 @@ export const LEGAL_CS = {
       },
       {
         heading: "3. Odpovědnost",
-        content: "Tiendamanilla S.L. neodpovídá za nepřímé škody."
+        content: "ABU Corp neodpovídá za nepřímé škody."
       },
       {
         heading: "4. Právo",

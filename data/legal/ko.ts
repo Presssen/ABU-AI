@@ -7,7 +7,7 @@ export const LEGAL_KO = {
     sections: [
       {
         heading: "1. 소개",
-        content: "스페인 비즈카이아에 위치한 Tiendamanilla S.L.은 ABU 앱을 운영합니다."
+        content: "스페인 비즈카이아에 위치한 ABU Corp은 ABU 앱을 운영합니다."
       },
       {
         heading: "2. 데이터 수집",
@@ -38,7 +38,7 @@ export const LEGAL_KO = {
       },
       {
         heading: "3. 책임 제한",
-        content: "Tiendamanilla S.L.은 간접적인 손해에 대해 책임을 지지 않습니다."
+        content: "ABU Corp은 간접적인 손해에 대해 책임을 지지 않습니다."
       },
       {
         heading: "4. 준거법",

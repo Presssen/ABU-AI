@@ -7,7 +7,7 @@ export const LEGAL_PT = {
     sections: [
       {
         heading: "1. Introdução",
-        content: "A Tiendamanilla S.L., localizada em Bizkaia, Espanha, opera a App ABU. Esta política descreve o tratamento dos seus dados."
+        content: "A ABU Corp, localizada em Bizkaia, Espanha, opera a App ABU. Esta política descreve o tratamento dos seus dados."
       },
       {
         heading: "2. Recolha de Dados",
@@ -38,7 +38,7 @@ export const LEGAL_PT = {
       },
       {
         heading: "3. Responsabilidade",
-        content: "A Tiendamanilla S.L. não se responsabiliza por danos indiretos ou perda de lucros."
+        content: "A ABU Corp não se responsabiliza por danos indiretos ou perda de lucros."
       },
       {
         heading: "4. Lei Aplicável",

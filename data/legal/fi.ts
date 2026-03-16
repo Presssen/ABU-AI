@@ -7,7 +7,7 @@ export const LEGAL_FI = {
     sections: [
       {
         heading: "1. Johdanto",
-        content: "Tiendamanilla S.L., Bizkaia, Espanja, hallinnoi ABU-sovellusta."
+        content: "ABU Corp, Bizkaia, Espanja, hallinnoi ABU-sovellusta."
       },
       {
         heading: "2. Tiedonkeruu",
@@ -38,7 +38,7 @@ export const LEGAL_FI = {
       },
       {
         heading: "3. Vastuu",
-        content: "Tiendamanilla S.L. ei vastaa epäsuorista vahingoista."
+        content: "ABU Corp ei vastaa epäsuorista vahingoista."
       },
       {
         heading: "4. Laki",

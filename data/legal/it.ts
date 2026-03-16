@@ -7,7 +7,7 @@ export const LEGAL_IT = {
     sections: [
       {
         heading: "1. Introduzione",
-        content: "Tiendamanilla S.L., con sede a Bizkaia, Spagna, gestisce l'app ABU. Questa informativa descrive come trattiamo i tuoi dati."
+        content: "ABU Corp, con sede a Bizkaia, Spagna, gestisce l'app ABU. Questa informativa descrive come trattiamo i tuoi dati."
       },
       {
         heading: "2. Raccolta Dati",
@@ -38,7 +38,7 @@ export const LEGAL_IT = {
       },
       {
         heading: "3. Limitazione di Responsabilità",
-        content: "Tiendamanilla S.L. non è responsabile per danni indiretti o perdita di profitti."
+        content: "ABU Corp non è responsabile per danni indiretti o perdita di profitti."
       },
       {
         heading: "4. Legge Applicabile",

@@ -32,7 +32,7 @@ const Hero: React.FC<HeroProps> = ({ text }) => {
               <span>{text.ctaPrimary}</span>
               <ArrowRight size={20} />
             </a>
-            <a href="https://ai-bundle-2.myshopify.com/" target="_blank" rel="noopener noreferrer" className="w-full sm:w-auto px-8 py-4 bg-white/5 backdrop-blur-md border border-white/10 text-white rounded-xl font-bold text-lg hover:bg-white/10 transition-all flex items-center justify-center">
+            <a href="https://abuapp.myshopify.com/" target="_blank" rel="noopener noreferrer" className="w-full sm:w-auto px-8 py-4 bg-white/5 backdrop-blur-md border border-white/10 text-white rounded-xl font-bold text-lg hover:bg-white/10 transition-all flex items-center justify-center">
               {text.ctaSecondary}
             </a>
           </div>

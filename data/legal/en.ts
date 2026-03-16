@@ -7,7 +7,7 @@ export const LEGAL_EN = {
     sections: [
       {
         heading: "1. Introduction",
-        content: "Tiendamanilla S.L. ('Company', 'we', 'us', or 'our'), located in Bizkaia, Spain, is the operator of the ABU Shopify App. This Privacy Policy describes how we collect, use, and share your personal information when you use our app."
+        content: "ABU Corp ('Company', 'we', 'us', or 'our'), located in Bizkaia, Spain, is the operator of the ABU Shopify App. This Privacy Policy describes how we collect, use, and share your personal information when you use our app."
       },
       {
         heading: "2. Data Collection",
@@ -42,7 +42,7 @@ export const LEGAL_EN = {
       },
       {
         heading: "3. Limitation of Liability",
-        content: "In no event shall Tiendamanilla S.L. be liable for any indirect, incidental, special, consequential or punitive damages, including without limitation, loss of profits, data, use, goodwill, or other intangible losses."
+        content: "In no event shall ABU Corp be liable for any indirect, incidental, special, consequential or punitive damages, including without limitation, loss of profits, data, use, goodwill, or other intangible losses."
       },
       {
         heading: "4. Governing Law",

@@ -7,7 +7,7 @@ export const LEGAL_ZH_TW = {
     sections: [
       {
         heading: "1. 簡介",
-        content: "Tiendamanilla S.L.（位於西班牙比斯開）運營 ABU 應用程式。"
+        content: "ABU Corp（位於西班牙比斯開）運營 ABU 應用程式。"
       },
       {
         heading: "2. 數據收集",
@@ -38,7 +38,7 @@ export const LEGAL_ZH_TW = {
       },
       {
         heading: "3. 責任限制",
-        content: "Tiendamanilla S.L. 不對間接損失負責。"
+        content: "ABU Corp 不對間接損失負責。"
       },
       {
         heading: "4. 法律",

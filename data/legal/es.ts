@@ -7,7 +7,7 @@ export const LEGAL_ES = {
     sections: [
       {
         heading: "1. Introducción",
-        content: "Tiendamanilla S.L. ('Empresa', 'nosotros' o 'nuestro'), ubicada en Bizkaia, España, es el operador de la App ABU para Shopify. Esta Política describe cómo recopilamos, usamos y compartimos su información."
+        content: "ABU Corp ('Empresa', 'nosotros' o 'nuestro'), ubicada en Bizkaia, España, es el operador de la App ABU para Shopify. Esta Política describe cómo recopilamos, usamos y compartimos su información."
       },
       {
         heading: "2. Recopilación de Datos",
@@ -42,7 +42,7 @@ export const LEGAL_ES = {
       },
       {
         heading: "3. Limitación de Responsabilidad",
-        content: "En ningún caso Tiendamanilla S.L. será responsable de daños indirectos, incidentales, especiales o consecuentes, incluyendo pérdida de beneficios o datos."
+        content: "En ningún caso ABU Corp será responsable de daños indirectos, incidentales, especiales o consecuentes, incluyendo pérdida de beneficios o datos."
       },
       {
         heading: "4. Ley Aplicable",

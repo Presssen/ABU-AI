@@ -7,7 +7,7 @@ export const LEGAL_DA = {
     sections: [
       {
         heading: "1. Introduktion",
-        content: "Tiendamanilla S.L., Bizkaia, Spanien, driver ABU-appen."
+        content: "ABU Corp, Bizkaia, Spanien, driver ABU-appen."
       },
       {
         heading: "2. Dataindsamling",
@@ -38,7 +38,7 @@ export const LEGAL_DA = {
       },
       {
         heading: "3. Ansvar",
-        content: "Tiendamanilla S.L. hæfter ikke for indirekte tab."
+        content: "ABU Corp hæfter ikke for indirekte tab."
       },
       {
         heading: "4. Lovvalg",

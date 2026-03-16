@@ -7,7 +7,7 @@ export const LEGAL_NL = {
     sections: [
       {
         heading: "1. Inleiding",
-        content: "Tiendamanilla S.L., gevestigd in Bizkaia, Spanje, beheert de ABU App. Dit beleid beschrijft gegevensverwerking."
+        content: "ABU Corp, gevestigd in Bizkaia, Spanje, beheert de ABU App. Dit beleid beschrijft gegevensverwerking."
       },
       {
         heading: "2. Gegevensverzameling",
@@ -38,7 +38,7 @@ export const LEGAL_NL = {
       },
       {
         heading: "3. Aansprakelijkheid",
-        content: "Tiendamanilla S.L. is niet aansprakelijk voor indirecte schade of winstderving."
+        content: "ABU Corp is niet aansprakelijk voor indirecte schade of winstderving."
       },
       {
         heading: "4. Toepasselijk Recht",
