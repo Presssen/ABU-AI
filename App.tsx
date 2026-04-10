@@ -22,6 +22,7 @@ import Background from './components/Background';
 import SEO from './components/SEO';
 import CookieConsent from './components/CookieConsent';
 import ChatWidget from './components/ChatWidget';
+import PromoPopup from './components/PromoPopup';
 
 
 
@@ -214,7 +215,7 @@ function AppContent() {
 // Landing Page Component
 function LandingPage({ lang, setLang, text }: any) {
   return (
-    <div className="min-h-screen text-white bg-[#0f172a] selection:bg-blue-500/30">
+    <div className="min-h-screen text-white selection:bg-blue-500/30">
       <Background />
       <Navbar lang={lang} setLang={setLang} text={text.nav} />
       <SEO
@@ -232,6 +233,7 @@ function LandingPage({ lang, setLang, text }: any) {
       <Footer text={text.footer} lang={lang} />
       <CookieConsent text={text.cookieConsent} lang={lang} />
       <ChatWidget lang={lang} content={text} />
+      <PromoPopup lang={lang} />
     </div>
   );
 }
@@ -239,7 +241,7 @@ function LandingPage({ lang, setLang, text }: any) {
 // Page with Navigation wrapper
 function PageWithNav({ lang, setLang, text, children }: any) {
   return (
-    <div className="min-h-screen text-white bg-[#0f172a] selection:bg-blue-500/30">
+    <div className="min-h-screen text-white selection:bg-blue-500/30">
       <Background />
       <Navbar lang={lang} setLang={setLang} text={text.nav} />
       <main>{children}</main>
@@ -255,7 +257,7 @@ function DemoStorePage({ onProductClick, isCartOpen, setIsCartOpen, selectedProd
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen text-white bg-[#0f172a] selection:bg-blue-500/30">
+    <div className="min-h-screen text-white selection:bg-blue-500/30">
       <Background />
       <DemoNavbar
         onExit={() => navigate(`/${lang}`)}
@@ -304,7 +306,7 @@ function ProductPageWrapper({ selectedProduct, onAddToCart, handleCheckout, isCa
   if (!selectedProduct) return null;
 
   return (
-    <div className="min-h-screen text-white bg-[#0f172a] selection:bg-blue-500/30">
+    <div className="min-h-screen text-white selection:bg-blue-500/30">
       <Background />
       <DemoNavbar
         onExit={() => navigate(`/${lang}`)}
@@ -348,7 +350,7 @@ function CartPageWrapper({ selectedProduct, handleCheckout, isCartOpen, setIsCar
   }
 
   return (
-    <div className="min-h-screen text-white bg-[#0f172a] selection:bg-blue-500/30">
+    <div className="min-h-screen text-white selection:bg-blue-500/30">
       <Background />
       <DemoNavbar
         onExit={() => navigate(`/${lang}`)}

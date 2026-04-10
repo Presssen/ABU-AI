@@ -1,7 +1,7 @@
 import React from 'react';
 import { Content } from '../types';
 import { GlassCard } from './ui/GlassCard';
-import { Brain, Layout, Palette, Tag, BarChart3, Globe2, Headset } from 'lucide-react';
+import { Brain, Layout, Palette, Tag, BarChart3, Globe2, Headset, Search, Sparkles, Percent, Table2 } from 'lucide-react';
 
 interface DetailedFeaturesProps {
   text: Content['detailedFeatures'];
@@ -24,7 +24,7 @@ const DetailedFeatures: React.FC<DetailedFeaturesProps> = ({ text }) => {
         </div>
 
         {/* Bento Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-4 grid-rows-auto md:grid-rows-3 gap-6 auto-rows-[minmax(180px,auto)]">
+        <div className="grid grid-cols-1 md:grid-cols-4 grid-rows-auto md:grid-rows-4 gap-6 auto-rows-[minmax(180px,auto)]">
           
           {/* AI Feature - Large Card */}
           <GlassCard className="col-span-1 md:col-span-2 md:row-span-2 p-8 group overflow-hidden" hoverEffect>
@@ -96,6 +96,48 @@ const DetailedFeatures: React.FC<DetailedFeaturesProps> = ({ text }) => {
              </div>
           </GlassCard>
 
+          {/* SEO & AI Search - Large Card */}
+          <GlassCard className="col-span-1 md:col-span-2 md:row-span-2 p-8 group overflow-hidden" hoverEffect>
+             <div className="absolute top-0 left-0 p-32 bg-emerald-500/15 blur-[60px] rounded-full group-hover:bg-emerald-500/25 transition-all duration-700" />
+             <div className="relative z-10 h-full flex flex-col justify-between">
+                <div>
+                    <div className="flex items-center justify-between mb-4">
+                        <div className="p-3 bg-emerald-500/20 rounded-xl border border-emerald-500/30 text-emerald-300">
+                            <Search size={32} />
+                        </div>
+                        {text.seo.tag && (
+                            <span className="px-3 py-1 bg-emerald-500/20 border border-emerald-500/30 rounded-full text-xs font-bold text-emerald-200 uppercase tracking-wider">
+                                {text.seo.tag}
+                            </span>
+                        )}
+                    </div>
+                    <h3 className="text-2xl font-bold text-white mb-2">{text.seo.title}</h3>
+                    <p className="text-blue-100/70 text-lg leading-relaxed">{text.seo.description}</p>
+                </div>
+                {/* Visual: Search engine logos / icons representation */}
+                <div className="mt-8 flex items-center gap-3 opacity-60 group-hover:opacity-100 transition-opacity">
+                    <div className="flex items-center gap-2 bg-white/[0.06] border border-white/[0.08] rounded-lg px-3 py-2">
+                        <div className="w-5 h-5 rounded bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center text-[8px] font-black text-white">G</div>
+                        <span className="text-[11px] text-gray-400 font-medium">Google</span>
+                    </div>
+                    <div className="flex items-center gap-2 bg-white/[0.06] border border-white/[0.08] rounded-lg px-3 py-2">
+                        <div className="w-5 h-5 rounded bg-gradient-to-br from-teal-400 to-teal-600 flex items-center justify-center">
+                            <Sparkles size={10} className="text-white" />
+                        </div>
+                        <span className="text-[11px] text-gray-400 font-medium">ChatGPT</span>
+                    </div>
+                    <div className="flex items-center gap-2 bg-white/[0.06] border border-white/[0.08] rounded-lg px-3 py-2">
+                        <div className="w-5 h-5 rounded bg-gradient-to-br from-purple-400 to-purple-600 flex items-center justify-center text-[8px] font-black text-white">P</div>
+                        <span className="text-[11px] text-gray-400 font-medium">Perplexity</span>
+                    </div>
+                    <div className="flex items-center gap-2 bg-white/[0.06] border border-white/[0.08] rounded-lg px-3 py-2">
+                        <div className="w-5 h-5 rounded bg-gradient-to-br from-blue-300 to-indigo-500 flex items-center justify-center text-[8px] font-black text-white">G</div>
+                        <span className="text-[11px] text-gray-400 font-medium">Gemini</span>
+                    </div>
+                </div>
+             </div>
+          </GlassCard>
+
           {/* Bundles */}
           <GlassCard className="col-span-1 p-6 group" hoverEffect>
               <div className="flex items-center space-x-3 mb-3">
@@ -138,6 +180,70 @@ const DetailedFeatures: React.FC<DetailedFeaturesProps> = ({ text }) => {
                   <h3 className="font-bold text-white">{text.support.title}</h3>
               </div>
               <p className="text-sm text-blue-100/60">{text.support.description}</p>
+          </GlassCard>
+
+          {/* Coming Soon - Full Width Highlight Card */}
+          <GlassCard className="col-span-1 md:col-span-4 p-8 group overflow-hidden relative" hoverEffect>
+             <div className="absolute top-0 right-0 w-96 h-96 bg-amber-500/10 blur-[80px] rounded-full group-hover:bg-amber-500/20 transition-all duration-700 pointer-events-none" />
+             <div className="absolute bottom-0 left-0 w-64 h-64 bg-violet-500/10 blur-[60px] rounded-full group-hover:bg-violet-500/15 transition-all duration-700 pointer-events-none" />
+             <div className="relative z-10 flex flex-col md:flex-row items-start md:items-center gap-6">
+                <div className="flex items-center gap-4 flex-shrink-0">
+                    <div className="p-4 bg-gradient-to-br from-amber-500/20 to-violet-500/20 rounded-2xl border border-amber-500/20 text-amber-300">
+                        <Sparkles size={32} />
+                    </div>
+                    {text.comingSoon.tag && (
+                        <span className="px-4 py-1.5 bg-gradient-to-r from-amber-500/20 to-violet-500/20 border border-amber-500/30 rounded-full text-xs font-bold text-amber-200 uppercase tracking-wider animate-pulse">
+                            {text.comingSoon.tag}
+                        </span>
+                    )}
+                </div>
+                <div className="flex-1">
+                    <h3 className="text-xl md:text-2xl font-bold text-white mb-2">{text.comingSoon.title}</h3>
+                    <p className="text-blue-100/70 text-base leading-relaxed">{text.comingSoon.description}</p>
+                </div>
+                {/* Visual mini-previews */}
+                <div className="flex gap-3 flex-shrink-0">
+                    {/* Quantity Discount Preview */}
+                    <div className="w-28 h-24 bg-white/[0.04] border border-white/[0.08] rounded-xl p-3 flex flex-col items-center justify-center gap-1.5 group-hover:border-amber-500/20 transition-colors">
+                        <Percent size={18} className="text-amber-400" />
+                        <div className="w-full space-y-1">
+                            <div className="flex justify-between items-center">
+                                <span className="text-[8px] text-gray-500">2+</span>
+                                <span className="text-[8px] text-emerald-400 font-bold">-5%</span>
+                            </div>
+                            <div className="flex justify-between items-center">
+                                <span className="text-[8px] text-gray-500">5+</span>
+                                <span className="text-[8px] text-emerald-400 font-bold">-10%</span>
+                            </div>
+                            <div className="flex justify-between items-center">
+                                <span className="text-[8px] text-gray-500">10+</span>
+                                <span className="text-[8px] text-emerald-400 font-bold">-20%</span>
+                            </div>
+                        </div>
+                    </div>
+                    {/* Comparison Table Preview */}
+                    <div className="w-28 h-24 bg-white/[0.04] border border-white/[0.08] rounded-xl p-3 flex flex-col items-center justify-center gap-1.5 group-hover:border-violet-500/20 transition-colors">
+                        <Table2 size={18} className="text-violet-400" />
+                        <div className="w-full space-y-1">
+                            <div className="flex gap-1">
+                                <div className="flex-1 h-1.5 bg-white/10 rounded-sm"></div>
+                                <div className="flex-1 h-1.5 bg-violet-500/30 rounded-sm"></div>
+                                <div className="flex-1 h-1.5 bg-white/10 rounded-sm"></div>
+                            </div>
+                            <div className="flex gap-1">
+                                <div className="flex-1 h-1.5 bg-white/10 rounded-sm"></div>
+                                <div className="flex-1 h-1.5 bg-violet-500/30 rounded-sm"></div>
+                                <div className="flex-1 h-1.5 bg-white/10 rounded-sm"></div>
+                            </div>
+                            <div className="flex gap-1">
+                                <div className="flex-1 h-1.5 bg-white/10 rounded-sm"></div>
+                                <div className="flex-1 h-1.5 bg-violet-500/30 rounded-sm"></div>
+                                <div className="flex-1 h-1.5 bg-white/10 rounded-sm"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+             </div>
           </GlassCard>
 
         </div>

@@ -108,9 +108,11 @@ export interface Content {
     widgets: DetailedFeatureItem;
     design: DetailedFeatureItem;
     bundles: DetailedFeatureItem;
+    seo: DetailedFeatureItem;
     data: DetailedFeatureItem;
     translation: DetailedFeatureItem;
     support: DetailedFeatureItem;
+    comingSoon: DetailedFeatureItem;
   };
   reviews: {
     title: string;

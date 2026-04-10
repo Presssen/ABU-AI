@@ -124,7 +124,7 @@ const CONTENT_BASE: Record<'en' | 'es', Content> = {
       badge: "Shopify's #1 Upsell App",
       title: "Skyrocket Your AOV with Smart Upsells",
       subtitle: "The all-in-one solution for Frequently Bought Together, In-Cart Popups, and Post-Purchase funnels. Designed to look native to your store.",
-      ctaPrimary: "Start Free Trial", ctaSecondary: "View Demo Store",
+      ctaPrimary: "Start Free Trial", ctaSecondary: "Calculate Your Revenue with ABU",
       stats: { users: "10,000+ Merchants", rating: "5.0/5 Rating" }
     },
     features: {
@@ -141,9 +141,11 @@ const CONTENT_BASE: Record<'en' | 'es', Content> = {
       widgets: { title: "5+ Widget Types", description: "Versatile layouts for every page: Product, Cart, Thank You, and more.", tag: "Versatile" },
       design: { title: "Native Design Adaptation", description: "We automatically detect your theme's fonts and colors. It looks like you coded it yourself.", tag: "Zero Config" },
       bundles: { title: "Bundle Discounts", description: "Incentivize bulk purchases with automatic tiered discounts." },
+      seo: { title: "SEO & AI Search Ready", description: "Your bundles generate structured data that appears in Google results and AI search engines like ChatGPT, Perplexity, and Gemini. More organic visibility, more sales.", tag: "SEO" },
       data: { title: "Data Analytics", description: "Track views, clicks, and conversion revenue in real-time." },
       translation: { title: "Multi-language", description: "Fully translatable widgets for global stores." },
-      support: { title: "Expert Support", description: "Direct access to Shopify experts via chat and email." }
+      support: { title: "Expert Support", description: "Direct access to Shopify experts via chat and email." },
+      comingSoon: { title: "Quantity Discounts & Comparison Tables", description: "Coming soon: Volume discount widgets that encourage higher quantities, and side-by-side comparison tables to help customers choose premium options.", tag: "Coming Soon" }
     },
     reviews: {
       title: "Loved by Merchants",
@@ -219,7 +221,7 @@ const CONTENT_BASE: Record<'en' | 'es', Content> = {
       badge: "App #1 de Upsell en Shopify",
       title: "Dispara tu Ticket Medio con Upsells Inteligentes",
       subtitle: "La solución todo en uno para 'Comprados Juntos Habitualmente', Pop-ups de Carrito y Embudos Post-compra. Diseño nativo para tu tienda.",
-      ctaPrimary: "Empezar Prueba Gratis", ctaSecondary: "Ver Tienda Demo",
+      ctaPrimary: "Empezar Prueba Gratis", ctaSecondary: "Calcula tu Facturación con ABU",
       stats: { users: "+10,000 Tiendas", rating: "Valoración 5.0/5" }
     },
     features: {
@@ -236,9 +238,11 @@ const CONTENT_BASE: Record<'en' | 'es', Content> = {
       widgets: { title: "+5 Tipos de Widgets", description: "Diseños versátiles para Producto, Carrito, Thank You page y más.", tag: "Versátil" },
       design: { title: "Adaptación de Diseño Nativo", description: "Detectamos automáticamente las fuentes y colores de tu tema.", tag: "Zero Config" },
       bundles: { title: "Descuentos por Bundles", description: "Incentiva compras masivas con descuentos escalonados." },
+      seo: { title: "SEO y Buscadores IA", description: "Tus bundles generan datos estructurados que aparecen en Google y en buscadores IA como ChatGPT, Perplexity y Gemini. Más visibilidad orgánica, más ventas.", tag: "SEO" },
       data: { title: "Análisis de Datos", description: "Rastrea vistas, clics e ingresos en tiempo real." },
       translation: { title: "Multi-idioma", description: "Widgets totalmente traducibles." },
-      support: { title: "Soporte Experto", description: "Acceso directo a expertos vía chat y email." }
+      support: { title: "Soporte Experto", description: "Acceso directo a expertos vía chat y email." },
+      comingSoon: { title: "Descuentos por Cantidad y Tablas Comparativas", description: "Próximamente: Widgets de descuento por volumen que incentivan compras mayores, y tablas comparativas lado a lado para que tus clientes elijan las opciones premium.", tag: "Próximamente" }
     },
     reviews: {
       title: "Amado por los eCommerce",
