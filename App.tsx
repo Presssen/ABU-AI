@@ -23,6 +23,7 @@ import SEO from './components/SEO';
 import CookieConsent from './components/CookieConsent';
 import ChatWidget from './components/ChatWidget';
 import PromoPopup from './components/PromoPopup';
+import Partnership from './components/Partnership';
 
 
 
@@ -229,6 +230,7 @@ function LandingPage({ lang, setLang, text }: any) {
       <DetailedFeatures text={text.detailedFeatures} />
       <Testimonials text={text.reviews} />
       <Pricing text={text.pricing} />
+      <Partnership />
       <FAQ text={text.faq} />
       <Footer text={text.footer} lang={lang} />
       <CookieConsent text={text.cookieConsent} lang={lang} />
