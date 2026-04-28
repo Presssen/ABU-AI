@@ -19,7 +19,7 @@ export const LEGAL_ZH_CN = {
       },
       {
         heading: "4. 您的权利",
-        content: "联系 info@tiendamanillc.com 以访问或删除数据。"
+        content: "联系 info@abuapp.io 以访问或删除数据。"
       }
     ]
   },

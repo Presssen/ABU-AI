@@ -49,7 +49,7 @@ const ChatWidget: React.FC<ChatWidgetProps> = ({ lang, content }) => {
           Pricing Plans:
           ${content.pricing.plans.map(p => `- ${p.name}: ${p.price}. ${p.description} Features: ${p.features.join(', ')}`).join('\n')}
           
-          Support Contact: info@tiendamanillc.com
+          Support Contact: info@abuapp.io
           
           Rules:
           - Keep answers concise and helpful.
@@ -94,8 +94,8 @@ const ChatWidget: React.FC<ChatWidgetProps> = ({ lang, content }) => {
                 id: (Date.now() + 1).toString(), 
                 role: 'model', 
                 text: lang === 'es' 
-                    ? "El chat no está conectado a la API en este momento. Por favor contáctanos a info@tiendamanillc.com." 
-                    : "Chat is currently offline (API Config missing). Please email us at info@tiendamanillc.com." 
+                    ? "El chat no está conectado a la API en este momento. Por favor contáctanos a info@abuapp.io." 
+                    : "Chat is currently offline (API Config missing). Please email us at info@abuapp.io." 
             };
             setMessages(prev => [...prev, fallbackMsg]);
             setIsLoading(false);

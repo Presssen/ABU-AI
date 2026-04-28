@@ -26,8 +26,8 @@ const ChatWidget: React.FC<ChatWidgetProps> = ({ lang, content }) => {
     // AI disabled - Fallback response
     setTimeout(() => {
         const fallbackText = lang === 'es' 
-            ? "Lo sentimos, el chat de soporte automático no está disponible en este momento. Por favor, contacta con info@tiendamanillc.com." 
-            : "Sorry, automated chat support is currently unavailable. Please contact info@tiendamanillc.com.";
+            ? "Lo sentimos, el chat de soporte automático no está disponible en este momento. Por favor, contacta con info@abuapp.io." 
+            : "Sorry, automated chat support is currently unavailable. Please contact info@abuapp.io.";
         
         setMessages(prev => [...prev, { 
             id: Date.now() + 1, 

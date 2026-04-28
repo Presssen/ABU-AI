@@ -23,7 +23,7 @@ export const LEGAL_ES = {
       },
       {
         heading: "5. Sus Derechos (RGPD)",
-        content: "Si es residente europeo, tiene derecho a acceder, corregir, actualizar o eliminar la información personal que tenemos sobre usted. Contáctenos en info@tiendamanillc.com para ejercer estos derechos."
+        content: "Si es residente europeo, tiene derecho a acceder, corregir, actualizar o eliminar la información personal que tenemos sobre usted. Contáctenos en info@abuapp.io para ejercer estos derechos."
       }
     ]
   },

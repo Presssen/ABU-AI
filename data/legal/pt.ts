@@ -19,7 +19,7 @@ export const LEGAL_PT = {
       },
       {
         heading: "4. Seus Direitos (RGPD)",
-        content: "Residentes europeus têm direito de acesso, correção e eliminação de dados. Contacto: info@tiendamanillc.com."
+        content: "Residentes europeus têm direito de acesso, correção e eliminação de dados. Contacto: info@abuapp.io."
       }
     ]
   },

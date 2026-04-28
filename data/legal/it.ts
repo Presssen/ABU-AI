@@ -19,7 +19,7 @@ export const LEGAL_IT = {
       },
       {
         heading: "4. I tuoi Diritti (GDPR)",
-        content: "I residenti europei possono richiedere accesso, modifica o cancellazione dei dati scrivendo a info@tiendamanillc.com."
+        content: "I residenti europei possono richiedere accesso, modifica o cancellazione dei dati scrivendo a info@abuapp.io."
       }
     ]
   },

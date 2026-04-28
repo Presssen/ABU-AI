@@ -19,7 +19,7 @@ export const LEGAL_JA = {
       },
       {
         heading: "4. 権利",
-        content: "データのアクセスや削除については info@tiendamanillc.com までご連絡ください。"
+        content: "データのアクセスや削除については info@abuapp.io までご連絡ください。"
       }
     ]
   },

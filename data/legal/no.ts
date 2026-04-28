@@ -19,7 +19,7 @@ export const LEGAL_NO = {
       },
       {
         heading: "4. Dine Rettigheter (GDPR)",
-        content: "Kontakt info@tiendamanillc.com for innsyn eller sletting."
+        content: "Kontakt info@abuapp.io for innsyn eller sletting."
       }
     ]
   },

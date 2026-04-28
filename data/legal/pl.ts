@@ -19,7 +19,7 @@ export const LEGAL_PL = {
       },
       {
         heading: "4. Twoje Prawa (RODO)",
-        content: "Masz prawo dostępu, poprawiania i usuwania swoich danych. Kontakt: info@tiendamanillc.com."
+        content: "Masz prawo dostępu, poprawiania i usuwania swoich danych. Kontakt: info@abuapp.io."
       }
     ]
   },

@@ -19,7 +19,7 @@ export const LEGAL_SV = {
       },
       {
         heading: "4. Dina Rättigheter (GDPR)",
-        content: "Europeiska invånare har rätt att komma åt och radera data. Kontakt: info@tiendamanillc.com."
+        content: "Europeiska invånare har rätt att komma åt och radera data. Kontakt: info@abuapp.io."
       }
     ]
   },

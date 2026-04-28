@@ -19,7 +19,7 @@ export const LEGAL_KO = {
       },
       {
         heading: "4. 권리",
-        content: "데이터 접근 또는 삭제는 info@tiendamanillc.com으로 문의하십시오."
+        content: "데이터 접근 또는 삭제는 info@abuapp.io으로 문의하십시오."
       }
     ]
   },

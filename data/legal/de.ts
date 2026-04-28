@@ -19,7 +19,7 @@ export const LEGAL_DE = {
       },
       {
         heading: "4. Ihre Rechte (DSGVO)",
-        content: "Als europäischer Einwohner haben Sie das Recht auf Auskunft, Berichtigung und Löschung Ihrer Daten. Kontakt: info@tiendamanillc.com."
+        content: "Als europäischer Einwohner haben Sie das Recht auf Auskunft, Berichtigung und Löschung Ihrer Daten. Kontakt: info@abuapp.io."
       }
     ]
   },

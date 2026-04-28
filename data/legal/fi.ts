@@ -19,7 +19,7 @@ export const LEGAL_FI = {
       },
       {
         heading: "4. Oikeutesi (GDPR)",
-        content: "Ota yhteyttä info@tiendamanillc.com tietojen tarkistamiseksi tai poistamiseksi."
+        content: "Ota yhteyttä info@abuapp.io tietojen tarkistamiseksi tai poistamiseksi."
       }
     ]
   },

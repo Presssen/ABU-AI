@@ -19,7 +19,7 @@ export const LEGAL_TH = {
       },
       {
         heading: "4. สิทธิ์ของคุณ",
-        content: "ติดต่อ info@tiendamanillc.com เพื่อเข้าถึงหรือลบข้อมูล"
+        content: "ติดต่อ info@abuapp.io เพื่อเข้าถึงหรือลบข้อมูล"
       }
     ]
   },

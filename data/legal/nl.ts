@@ -19,7 +19,7 @@ export const LEGAL_NL = {
       },
       {
         heading: "4. Uw Rechten (AVG)",
-        content: "Europese bewoners hebben recht op inzage en verwijdering. Contact: info@tiendamanillc.com."
+        content: "Europese bewoners hebben recht op inzage en verwijdering. Contact: info@abuapp.io."
       }
     ]
   },

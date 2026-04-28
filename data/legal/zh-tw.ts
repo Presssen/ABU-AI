@@ -19,7 +19,7 @@ export const LEGAL_ZH_TW = {
       },
       {
         heading: "4. 您的權利",
-        content: "聯繫 info@tiendamanillc.com 以訪問或刪除數據。"
+        content: "聯繫 info@abuapp.io 以訪問或刪除數據。"
       }
     ]
   },

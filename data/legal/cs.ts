@@ -19,7 +19,7 @@ export const LEGAL_CS = {
       },
       {
         heading: "4. Vaše práva (GDPR)",
-        content: "Kontaktujte info@tiendamanillc.com pro přístup nebo výmaz."
+        content: "Kontaktujte info@abuapp.io pro přístup nebo výmaz."
       }
     ]
   },

@@ -113,6 +113,14 @@ const Navbar: React.FC<NavbarProps> = ({ lang, setLang, text }) => {
                 {text.pricing}
                 <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-500 transition-all group-hover:w-full"></span>
               </a>
+              <a
+                href="#partnership"
+                onClick={(e) => handleNavClick(e, 'partnership')}
+                className="text-gray-300 hover:text-white transition-colors text-sm font-medium relative group"
+              >
+                Partners
+                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-[#95BF47] transition-all group-hover:w-full"></span>
+              </a>
               <button
                 onClick={(e) => handlePageChange(e, '/blog')}
                 className="text-gray-300 hover:text-white transition-colors text-sm font-medium relative group"
@@ -193,6 +201,7 @@ const Navbar: React.FC<NavbarProps> = ({ lang, setLang, text }) => {
             <a href="#features" className="block text-gray-300 hover:text-white font-medium p-2 hover:bg-white/5 rounded-lg" onClick={(e) => handleNavClick(e, 'features')}>{text.features}</a>
             <a href="#detailed-features" className="block text-gray-300 hover:text-white font-medium p-2 hover:bg-white/5 rounded-lg" onClick={(e) => handleNavClick(e, 'detailed-features')}>{text.details}</a>
             <a href="#pricing" className="block text-gray-300 hover:text-white font-medium p-2 hover:bg-white/5 rounded-lg" onClick={(e) => handleNavClick(e, 'pricing')}>{text.pricing}</a>
+            <a href="#partnership" className="block text-gray-300 hover:text-white font-medium p-2 hover:bg-white/5 rounded-lg" onClick={(e) => handleNavClick(e, 'partnership')}>Partners</a>
             <button className="block w-full text-left text-gray-300 hover:text-white font-medium p-2 hover:bg-white/5 rounded-lg" onClick={(e) => handlePageChange(e, '/blog')}>{text.blog}</button>
             <a href="https://apps.shopify.com/abu-cross-selling-upselling" className="flex items-center justify-center space-x-2 w-full bg-white px-5 py-3 rounded-xl font-bold">
               <img src={SHOPIFY_LOGO_URL} alt="Shopify" className="h-6 w-auto object-contain" />

@@ -23,7 +23,7 @@ export const LEGAL_EN = {
       },
       {
         heading: "5. Your Rights (GDPR)",
-        content: "If you are a European resident, you have the right to access personal information we hold about you and to ask that your personal information be corrected, updated, or deleted. Contact us at info@tiendamanillc.com to exercise these rights."
+        content: "If you are a European resident, you have the right to access personal information we hold about you and to ask that your personal information be corrected, updated, or deleted. Contact us at info@abuapp.io to exercise these rights."
       }
     ]
   },

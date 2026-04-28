@@ -19,7 +19,7 @@ export const LEGAL_TR = {
       },
       {
         heading: "4. Haklarınız",
-        content: "Erişim veya silme talebi için info@tiendamanillc.com ile iletişime geçin."
+        content: "Erişim veya silme talebi için info@abuapp.io ile iletişime geçin."
       }
     ]
   },

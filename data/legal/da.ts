@@ -19,7 +19,7 @@ export const LEGAL_DA = {
       },
       {
         heading: "4. Dine Rettigheder (GDPR)",
-        content: "Kontakt info@tiendamanillc.com for adgang eller sletning af data."
+        content: "Kontakt info@abuapp.io for adgang eller sletning af data."
       }
     ]
   },
